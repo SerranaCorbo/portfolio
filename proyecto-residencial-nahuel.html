@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="es">
+<link rel="icon" type="image/png" href="img/favicon.png">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Residencial Nahuel — Serrana Corbo</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F0F2F8;--bg2:#E8ECF5;--bg-warm:#F5F4F0;
+  --surface:rgba(255,255,255,0.68);
+  --border-sm:rgba(180,190,220,0.32);
+  --shadow:0 8px 32px rgba(100,120,200,0.10);
+  --shadow-lg:0 24px 72px rgba(80,100,180,0.18);
+  --cyan:#0891B2;--lav:#7C3AED;
+  --warm:#B79266;--warm-dk:#946335;--warm-lt:#E8D4B9;
+--grad-warm:linear-gradient(135deg,#B79266 0%,#946335 100%);
+  --text:#1A1D2E;--text2:#4B5563;--text3:#9CA3AF;
+  --white:#FFFFFF;--dark:#1A1D2E;
+  --grad:linear-gradient(135deg,#0891B2 0%,#7C3AED 100%);
+  --font-serif:'DM Serif Display',serif;
+  --font-title:'Satoshi',sans-serif;
+  --font-body:'Manrope',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:#1A1D2E;color:var(--text);font-family:var(--font-body);overflow-x:hidden;cursor:none;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:.35;mix-blend-mode:multiply;}
+
+/* CURSOR */
+.cursor-dot{width:6px;height:6px;border-radius:50%;background:var(--warm);position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .18s,height .18s;}
+.cursor-ring{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(183,146,102,0.35);position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .22s,height .22s,border-color .22s;}
+.cursor-ring.hovering{width:46px;height:46px;border-color:rgba(183,146,102,0.6)}
+@media(hover:none){body{cursor:auto;}.cursor-dot,.cursor-ring{display:none;}}
+
+/* READING BAR */
+.reading-bar{position:fixed;top:0;left:0;height:2.5px;width:0%;background:var(--grad-warm);z-index:500;pointer-events:none;}
+
+/* NAVBAR */
+header{position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(245,244,240,0.85);backdrop-filter:blur(24px) saturate(1.8);
+  -webkit-backdrop-filter:blur(24px) saturate(1.8);
+  border-bottom:1px solid var(--border-sm);transition:box-shadow .3s;}
+header.scrolled{box-shadow:0 4px 32px rgba(80,100,180,0.10);}
+nav{max-width:1280px;margin:0 auto;display:flex;align-items:center;padding:0 60px;height:72px;}
+.nav-logo-slot{display:flex;align-items:center;justify-content:center;width:40px;height:40px;flex-shrink:0;
+  border:none dashed rgba(124,58,237,0.28);border-radius:8px;color:var(--text3);
+  font-size:8px;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;
+  transition:border-color .25s,color .25s;}
+.nav-logo-slot:hover{border-color:var(--lav);color:var(--lav);}
+.nav-logo-slot img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+.nav-links{display:flex;gap:36px;list-style:none;margin-left:auto;}
+.nav-links a{font-size:14px;font-weight:500;color:var(--text2);text-decoration:none;transition:color .22s;}
+.nav-links a:hover{color:var(--lav);}
+.nav-links a.active{color:var(--text);}
+.nav-links a.active::before{content:'·';margin-right:4px;color:var(--cyan);font-size:20px;line-height:0;vertical-align:middle;}
+
+/* PROGRESS DOTS */
+.section-progress{position:fixed;right:28px;top:50%;transform:translateY(-50%);z-index:100;
+  display:flex;flex-direction:column;gap:10px;align-items:center;}
+.sp-dot{width:6px;height:6px;border-radius:50%;background:rgba(26,29,46,0.15);
+  cursor:pointer;transition:all .35s;position:relative;}
+.sp-dot::after{content:attr(data-label);position:absolute;right:16px;top:50%;
+  transform:translateY(-50%);font-size:10px;font-weight:600;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--text2);white-space:nowrap;opacity:0;
+  transition:opacity .2s;pointer-events:none;}
+.sp-dot:hover::after,.sp-dot.active::after{opacity:1;}
+.sp-dot.active{background:var(--warm);width:8px;height:8px;}
+.sp-dot.active::after{color:var(--warm)}
+.sp-line{width:1px;height:20px;background:rgba(26,29,46,0.1);}
+
+/* HERO */
+.project-hero{position:relative;min-height:100vh;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:140px 60px 80px;overflow:hidden;background:#F5F2EE;}
+.project-hero-bg{position:absolute;inset:0;z-index:0;background:#F5F2EE;}
+.project-hero-bg img{width:100%;height:100%;object-fit:cover;display:block;
+  opacity:0.55;filter:saturate(0.7);}
+.project-hero-bg::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(245,242,238,0.92) 0%,rgba(245,242,238,0.55) 45%,rgba(245,242,238,0.15) 100%);}
+.project-hero-inner{position:relative;z-index:2;max-width:820px;}
+.project-hero-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;
+  background:rgba(183,146,102,0.08);backdrop-filter:blur(12px);
+  border:1px solid rgba(183,146,102,0.22);border-radius:100px;
+  font-size:11px;font-weight:600;color:var(--warm-dk);
+  letter-spacing:0.14em;text-transform:uppercase;margin-bottom:24px;
+  opacity:0;animation:fadeUp .7s ease .1s both;}
+.project-hero-chip::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--warm);flex-shrink:0;}
+.project-hero-title{font-family:var(--font-serif);font-style:italic;
+  font-size:clamp(48px,7vw,96px);font-weight:400;line-height:.95;
+  letter-spacing:-0.03em;color:var(--text);margin-bottom:8px;
+  opacity:0;animation:fadeUp .9s cubic-bezier(.22,.68,0,1.1) .2s both;padding-bottom:8px;}
+.project-hero-title strong{font-family:var(--font-title);font-weight:700;font-style:normal;
+  display:block;background:var(--grad-warm);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;padding-bottom:10px;}
+.project-hero-sub{font-size:17px;font-weight:300;line-height:1.75;
+  color:var(--text2);max-width:560px;
+  opacity:0;animation:fadeUp .9s ease .4s both;}
+.project-hero-meta{display:flex;gap:32px;flex-wrap:wrap;margin-top:40px;
+  padding-top:32px;border-top:1px solid var(--border-sm);
+  opacity:0;animation:fadeUp .9s ease .55s both;}
+.meta-item{display:flex;flex-direction:column;gap:4px;}
+.meta-label{font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);}
+.meta-value{font-size:14px;font-weight:500;color:var(--text);}
+.hero-scroll-cue{position:absolute;bottom:28px;left:60px;display:flex;flex-direction:column;
+  align-items:center;gap:8px;opacity:0;animation:fadeUp 1s ease .9s both;z-index:2;}
+.hsc-text{font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);}
+.hsc-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--warm),transparent);animation:breathe 2s ease-in-out infinite;}
+
+/* CONTENIDO */
+.content-root{background:var(--bg-warm);}
+.case-wrap{max-width:1160px;margin:0 auto;padding:100px 60px;display:flex;flex-direction:column;gap:0;}
+
+/* SECCIÓN */
+.cs-section{display:flex;flex-direction:column;gap:20px;padding:80px 0;position:relative;}
+.cs-section:not(:last-child){border-bottom:1px solid var(--border-sm);}
+.cs-section-num{position:absolute;top:72px;right:-20px;font-family:var(--font-serif);
+  font-style:italic;font-size:120px;font-weight:400;color:rgba(183,146,102,0.06);
+  line-height:1;pointer-events:none;user-select:none;}
+
+/* LABELS Y TÍTULOS */
+.cs-label{font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--warm);display:inline-flex;align-items:center;gap:10px}
+.cs-label::before{content:'';display:block;width:22px;height:1.5px;background:var(--warm);border-radius:2px;}
+.cs-title{font-family:var(--font-title);font-size:clamp(24px,3vw,36px);font-weight:700;
+  line-height:1.1;letter-spacing:-0.025em;color:var(--text);}
+.cs-title em{font-family:var(--font-serif);font-style:italic;font-weight:400;
+  background:var(--grad-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;padding-bottom:2px;}
+.cs-body{font-size:15.5px;line-height:1.88;color:var(--text2);font-weight:300;max-width:700px;}
+.cs-body strong{font-weight:600;color:var(--text);}
+
+/* REVEAL */
+.slide-in{opacity:0;transition:opacity .75s ease,transform .75s cubic-bezier(.22,.68,0,1.1);}
+.slide-in.from-left{transform:translateX(-48px);}
+.slide-in.from-right{transform:translateX(48px);}
+.slide-in.from-bottom{transform:translateY(36px);}
+.slide-in.visible{opacity:1;transform:translate(0,0);}
+.si-d1{transition-delay:.1s;}.si-d2{transition-delay:.2s;}.si-d3{transition-delay:.3s;}.si-d4{transition-delay:.4s;}
+
+/* HIGHLIGHT */
+.cs-highlight{padding:28px 32px;background:rgba(183,146,102,0.06);
+  border-left:3px solid var(--warm);border-radius:0 12px 12px 0;}
+.cs-highlight p{font-family:var(--font-serif);font-style:italic;font-size:18px;line-height:1.65;color:var(--text);}
+.cs-highlight span{background:var(--grad-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* TAGS */
+.cs-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.cs-tag{padding:6px 14px;background:var(--surface);border:1px solid var(--border-sm);
+  border-radius:100px;font-size:12px;font-weight:500;color:var(--text2);}
+.cs-tag.c{border-color:rgba(8,145,178,0.25);color:var(--cyan);background:rgba(8,145,178,0.05);}
+.cs-tag.l{border-color:rgba(124,58,237,0.25);color:var(--lav);background:rgba(124,58,237,0.05);}
+
+/* BENTO GALERÍA full-width */
+.bento-gallery{width:100vw;margin-left:calc(-50vw + 50%);display:grid;
+  grid-template-columns:1.6fr 1fr 1fr;grid-template-rows:280px 320px;gap:3px;}
+.bg-item{overflow:hidden;background:var(--bg2);position:relative;}
+.bg-item.tall{grid-row:span 2;}
+.bg-item.wide{grid-column:span 2;}
+.bg-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease;}
+.bg-item:hover img{transform:scale(1.05);}
+
+/* PROCESO — DT tabs */
+.dt-wrapper{margin-top:8px;}
+.dt-tabs{display:flex;gap:0;border-bottom:1px solid var(--border-sm);margin-bottom:32px;}
+.dt-tab{padding:12px 24px;font-size:13px;font-weight:600;color:var(--text3);
+  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color .25s,border-color .25s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;}
+.dt-tab:hover{color:var(--text2);}
+.dt-tab.active{color:var(--warm);border-bottom-color:var(--warm)}
+.dt-panel{display:none;animation:fadeUp .4s ease both;}
+.dt-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+.dt-panel-text{display:flex;flex-direction:column;gap:16px;}
+.dt-panel-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--warm);}
+.dt-panel-title{font-family:var(--font-title);font-size:22px;font-weight:700;color:var(--text);}
+.dt-panel-body{font-size:14.5px;line-height:1.85;color:var(--text2);font-weight:300;}
+.dt-panel-body strong{font-weight:600;color:var(--text);}
+.dt-panel-body ul{padding-left:18px;display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.dt-panel-body li{font-size:14px;color:var(--text2);font-weight:300;}
+.dt-panel-img{background:var(--bg2);border-radius:16px;overflow:hidden;aspect-ratio:4/3;
+  border:1px solid var(--border-sm);position:relative;}
+.dt-panel-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.dt-panel-img-label{position:absolute;bottom:12px;left:12px;padding:4px 10px;
+  background:rgba(26,29,46,0.72);backdrop-filter:blur(8px);border-radius:100px;
+  font-size:10px;font-weight:600;color:var(--white);letter-spacing:0.08em;}
+
+/* TIPOLOGÍAS — cards */
+.tipologias-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+.tip-card{background:var(--white);border:1px solid var(--border-sm);border-radius:20px;
+  overflow:hidden;transition:box-shadow .3s,transform .3s;}
+.tip-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px);}
+.tip-card-img{aspect-ratio:4/3;background:var(--bg2);overflow:hidden;position:relative;}
+.tip-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
+.tip-card:hover .tip-card-img img{transform:scale(1.04);}
+.tip-card-badge{position:absolute;top:14px;left:14px;padding:5px 12px;
+  background:rgba(26,29,46,0.75);backdrop-filter:blur(8px);border-radius:100px;
+  font-size:10px;font-weight:600;color:var(--white);letter-spacing:0.08em;}
+.tip-card-body{padding:28px 28px 32px;}
+.tip-card-title{font-family:var(--font-title);font-size:18px;font-weight:700;color:var(--text);margin-bottom:10px;}
+.tip-card-desc{font-size:13.5px;color:var(--text2);line-height:1.7;font-weight:300;}
+.tip-card-desc strong{font-weight:600;color:var(--text);}
+
+/* MECANISMO — detalle con anotaciones */
+.mec-block{background:var(--white);border:1px solid var(--border-sm);border-radius:20px;overflow:hidden;margin-top:8px;}
+.mec-header{padding:28px 36px;border-bottom:1px solid var(--border-sm);}
+.mec-header-title{font-family:var(--font-title);font-size:17px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.mec-header-sub{font-size:13.5px;color:var(--text2);font-weight:300;line-height:1.6;}
+.mec-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.mec-img{background:transparent;overflow:hidden;position:relative;min-height:320px;}
+.mec-img img{width:100%;height:100%;object-fit:contain;padding:24px;display:block;}
+.mec-annotations{padding:32px 36px;display:flex;flex-direction:column;gap:18px;justify-content:center;}
+.mec-anno{display:flex;align-items:flex-start;gap:14px;}
+.mec-dot{width:8px;height:8px;border-radius:50%;background:var(--warm);flex-shrink:0;margin-top:5px;}
+.mec-anno-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.mec-anno-desc{font-size:12.5px;color:var(--text2);line-height:1.55;font-weight:300;}
+
+/* ERGONOMÍA — tabla de medidas */
+.ergo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px;}
+.ergo-card{background:var(--white);border:1px solid var(--border-sm);border-radius:16px;
+  padding:28px 24px;transition:box-shadow .3s,transform .3s;cursor:default;}
+.ergo-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px);}
+.ergo-card::before{content:'';display:block;height:3px;background:var(--grad-warm);
+  border-radius:2px;margin-bottom:20px;}
+.ergo-dim{font-family:var(--font-serif);font-style:italic;font-size:40px;font-weight:400;
+  background:var(--grad-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;line-height:1;padding-bottom:4px;margin-bottom:8px;}
+.ergo-label{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:0.02em;}
+.ergo-desc{font-size:12.5px;color:var(--text2);line-height:1.6;font-weight:300;}
+.ergo-ref{font-size:11px;color:var(--text3);margin-top:8px;font-style:italic;}
+
+/* CONSTRUCTIVO — galería 2x2 full width */
+.constructive-grid{width:100vw;margin-left:calc(-50vw + 50%);display:grid;
+  grid-template-columns:1fr 1fr;gap:3px;}
+.c-img{background:#EEF2FA;overflow:hidden;position:relative;aspect-ratio:4/3;}
+.c-img img{width:100%;height:100%;object-fit:contain;padding:16px;
+  background:#EEF2FA;display:block;transition:transform .4s ease;}
+.c-img:hover img{transform:scale(1.03);}
+.c-img-badge{position:absolute;bottom:12px;left:12px;padding:4px 10px;
+  background:rgba(26,29,46,0.75);backdrop-filter:blur(8px);border-radius:100px;
+  font-size:10px;font-weight:600;color:var(--white);letter-spacing:0.08em;}
+
+/* MATERIALES */
+.mat-block{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+.mat-card{background:var(--white);border:1px solid var(--border-sm);border-radius:16px;padding:28px 24px;}
+.mat-card-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:12px;}
+.mat-card-title{font-family:var(--font-title);font-size:17px;font-weight:700;color:var(--text);margin-bottom:10px;}
+.mat-card-body{font-size:13.5px;color:var(--text2);line-height:1.7;font-weight:300;}
+.mat-card-body strong{font-weight:600;color:var(--text);}
+
+/* RESULTADO FINAL full width */
+.result-fullwidth{width:100vw;margin-left:calc(-50vw + 50%);display:flex;flex-direction:column;gap:3px;overflow:hidden;}
+.result-row1,.result-row2{display:grid;gap:3px;}
+.result-row1{grid-template-columns:2fr 1fr;}
+.result-row2{grid-template-columns:1fr 1fr 1fr;}
+.r-img{position:relative;overflow:hidden;background:var(--bg2);aspect-ratio:16/9;}
+.result-row1 .r-img{aspect-ratio:auto;min-height:340px;}
+.r-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
+.r-img:hover img{transform:scale(1.04);}
+.r-label{position:absolute;bottom:12px;left:12px;padding:4px 10px;
+  background:rgba(26,29,46,0.72);backdrop-filter:blur(8px);border-radius:100px;
+  font-size:10px;font-weight:600;color:var(--white);letter-spacing:0.08em;}
+
+/* REFLEXIÓN */
+.reflection-block{background:var(--dark);border-radius:20px;padding:40px 48px;position:relative;overflow:hidden;}
+.reflection-block::before{content:'';position:absolute;top:-60px;right:-60px;
+  width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(8,145,178,0.1) 0%,transparent 70%);pointer-events:none;}
+.reflection-block p{font-family:var(--font-serif);font-style:italic;
+  font-size:clamp(18px,2.2vw,24px);line-height:1.65;color:rgba(255,255,255,0.85);
+  position:relative;z-index:1;max-width:800px;}
+.reflection-block span{background:var(--grad-warm);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;padding-bottom:2px;}
+
+/* DOWNLOAD */
+.download-wrap{display:flex;align-items:center;gap:16px;margin-top:8px;}
+.download-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;
+  background:var(--grad-warm);border-radius:100px;font-size:13px;font-weight:600;
+  color:var(--white);text-decoration:none;transition:box-shadow .3s,transform .3s;}
+.download-btn:hover{box-shadow:0 8px 24px rgba(183,146,102,0.3);transform:translateY(-2px);}
+.download-hint{font-size:12px;color:var(--text3);}
+
+/* NAV ENTRE PROYECTOS */
+.project-nav{max-width:1160px;margin:0 auto;padding:60px 60px 80px;
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+  border-top:1px solid var(--border-sm);}
+.pnb{display:flex;align-items:center;gap:16px;padding:20px 24px;
+  background:var(--white);border:1px solid var(--border-sm);
+  border-radius:16px;text-decoration:none;color:var(--text);transition:all .28s;}
+.pnb:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);border-color:rgba(8,145,178,0.3);}
+.pnb.next{justify-content:flex-end;text-align:right;}
+.pnb-arrow{font-size:20px;color:var(--cyan);transition:transform .25s;}
+.pnb.prev:hover .pnb-arrow{transform:translateX(-4px);}
+.pnb.next:hover .pnb-arrow{transform:translateX(4px);}
+.pnb-label{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.pnb-title{font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--text);}
+
+/* FOOTER */
+footer{padding:64px 40px;display:flex;flex-direction:column;align-items:center;
+  gap:22px;text-align:center;background:#1A1D2E;}
+.footer-name{font-family:var(--font-title);font-size:13px;font-weight:700;
+  letter-spacing:0.18em;text-transform:uppercase;background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-icons{display:flex;gap:28px;}
+.footer-icon{display:flex;align-items:center;color:rgba(255,255,255,0.35);
+  text-decoration:none;transition:color .25s,transform .25s;}
+.footer-icon:hover{color:rgba(255,255,255,0.85);transform:translateY(-3px);}
+.footer-tagline{font-size:12px;color:rgba(255,255,255,0.28);letter-spacing:0.1em;text-transform:uppercase;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes breathe{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+/* RESPONSIVE */
+@media(max-width:1100px){.section-progress{display:none;}}
+@media(max-width:900px){
+  .tipologias-grid{grid-template-columns:1fr;}
+  .mec-inner{grid-template-columns:1fr;}
+  .ergo-grid{grid-template-columns:1fr 1fr;}
+  .mat-block{grid-template-columns:1fr;}
+  .dt-panel.active{grid-template-columns:1fr;}
+  .dt-panel-img{display:none;}
+}
+
+
+/* ── HAMBURGER MENU — desktop: oculto, mobile: visible ── */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;
+  width:40px;height:40px;cursor:pointer;margin-left:auto;background:none;
+  border:none;padding:8px;border-radius:8px;transition:background .2s;flex-shrink:0;}
+.nav-hamburger:hover{background:rgba(124,58,237,0.08);}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--text);
+  border-radius:2px;transition:transform .3s ease,opacity .3s ease,width .3s ease;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;width:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* Panel mobile */
+.nav-mobile-overlay{position:fixed;inset:0;background:rgba(26,29,46,0.5);
+  backdrop-filter:blur(4px);z-index:150;opacity:0;pointer-events:none;
+  transition:opacity .3s ease;}
+.nav-mobile-overlay.open{opacity:1;pointer-events:all;}
+.nav-mobile-panel{position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);
+  background:var(--bg-warm);z-index:160;
+  display:flex;flex-direction:column;padding:88px 32px 48px;
+  transform:translateX(100%);transition:transform .35s cubic-bezier(.22,.68,0,1.1);
+  box-shadow:-8px 0 40px rgba(0,0,0,0.12);}
+.nav-mobile-panel.open{transform:translateX(0);}
+.nav-mobile-links{display:flex;flex-direction:column;gap:4px;list-style:none;}
+.nav-mobile-links a{font-family:var(--font-body);font-size:15px;font-weight:500;
+  color:var(--text2);text-decoration:none;padding:14px 0;
+  border-bottom:1px solid var(--border-sm);display:block;letter-spacing:0.01em;
+  transition:color .22s,padding-left .22s;}
+.nav-mobile-links a:hover{color:var(--lav);padding-left:6px;}
+.nav-mobile-links a.active{color:var(--text);font-weight:600;}
+.nav-mobile-links a.active::before{content:'·';margin-right:6px;color:var(--cyan);font-size:18px;line-height:0;vertical-align:middle;}
+.nav-mobile-links a:last-child{border-bottom:none;}
+.nav-mobile-footer{margin-top:auto;font-size:12px;color:var(--text3);letter-spacing:0.08em;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){.section-progress{display:none;}}
+@media(max-width:900px){
+  .tipologias-grid{grid-template-columns:1fr;}
+  .mec-inner{grid-template-columns:1fr;}
+  .ergo-grid{grid-template-columns:1fr 1fr;}
+  .mat-block{grid-template-columns:1fr;}
+  .dt-panel.active{grid-template-columns:1fr;}
+  .dt-panel-img{display:none;}
+}
+@media(max-width:768px){
+  body{cursor:auto;}
+  .cursor-dot,.cursor-ring{display:none;}
+  /* Navbar */
+  nav{padding:0 24px;height:64px;}
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+  /* Hero — sin min-height fija, contenido desde arriba */
+  .project-hero{min-height:0;height:auto;padding:80px 24px 48px;justify-content:flex-start;}
+  .project-hero-title{font-size:clamp(38px,10vw,60px);}
+  .hero-scroll-cue{display:none;}
+  /* Contenido */
+  .case-wrap{padding:60px 24px;}
+  .bento-gallery{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+  .bg-item.tall{grid-row:span 1;}
+  .ergo-grid{grid-template-columns:1fr;}
+  .constructive-grid{grid-template-columns:1fr;}
+  .result-row1,.result-row2{grid-template-columns:1fr;}
+  .dt-tabs{overflow-x:auto;padding-bottom:4px;}
+  .dt-tab{padding:10px 16px;font-size:12px;}
+  .project-nav{grid-template-columns:1fr;padding:40px 24px;}
+  footer{padding:48px 24px;}
+  .cs-section-num{display:none;}
+  .reflection-block{padding:32px 28px;}
+}
+
+/* Bento de imágenes en sección de mecanismos */
+.mec-img-bento{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;min-height:320px;}
+.mec-img-bento .bi{overflow:hidden;background:#EEF2FA;position:relative;}
+.mec-img-bento .bi.tall{grid-row:span 2;}
+.mec-img-bento .bi img{width:100%;height:100%;object-fit:contain;padding:12px;display:block;transition:transform .4s ease;}
+.mec-img-bento .bi:hover img{transform:scale(1.03);}
+.bi-label{position:absolute;bottom:8px;left:8px;padding:3px 8px;
+  background:rgba(26,29,46,0.72);backdrop-filter:blur(8px);border-radius:100px;
+  font-size:9px;font-weight:600;color:rgba(255,255,255,0.85);letter-spacing:0.08em;}
+.mec-img-bento .bi-label{position:absolute;bottom:8px;left:8px;padding:3px 8px;background:rgba(26,29,46,0.72);backdrop-filter:blur(8px);border-radius:100px;font-size:9px;font-weight:600;color:rgba(255,255,255,0.85);letter-spacing:0.08em;}
+/* Hero decorativo SVG */
+.hero-deco-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+</style>
+</head>
+<body>
+
+<div class="reading-bar" id="readingBar"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- PROGRESS DOTS -->
+<div class="section-progress" id="sectionProgress">
+  <div class="sp-dot active" data-target="contexto" data-label="Contexto"></div>
+  <div class="sp-line"></div>
+  <div class="sp-dot" data-target="proceso" data-label="Proceso"></div>
+  <div class="sp-line"></div>
+  <div class="sp-dot" data-target="tipologias" data-label="Tipologías"></div>
+  <div class="sp-line"></div>
+  <div class="sp-dot" data-target="ergonomia" data-label="Ergonomía"></div>
+  <div class="sp-line"></div>
+  <div class="sp-dot" data-target="constructivo" data-label="Constructivo"></div>
+  <div class="sp-line"></div>
+  <div class="sp-dot" data-target="resultado" data-label="Resultado"></div>
+  <div class="sp-line"></div>
+  <div class="sp-dot" data-target="reflexion" data-label="Reflexión"></div>
+</div>
+
+
+<!-- MENÚ MOBILE -->
+<div class="nav-mobile-overlay" id="navOverlay"></div>
+<div class="nav-mobile-panel" id="navPanel">
+  <ul class="nav-mobile-links">
+    <li><a href="index.html#hero" class="nav-mobile-link">Inicio</a></li>
+    <li><a href="index.html#about" class="nav-mobile-link">Sobre mí</a></li>
+    <li><a href="index.html#work" class="nav-mobile-link">Proyectos</a></li>
+    <li><a href="index.html#contact" class="nav-mobile-link">Contacto</a></li>
+  </ul>
+  <div class="nav-mobile-footer">Serrana Corbo · Diseñadora Industrial + UX/UI</div>
+</div>
+
+<!-- NAVBAR -->
+<header id="siteHeader">
+  <nav>
+    <a href="portfolio-serrana-v7.html" class="nav-logo-slot" title="Inicio"><img src="img/logo.png" alt="Mi Logo"></a>
+    <ul class="nav-links">
+      <li><a href="index.html#hero">Inicio</a></li>
+      <li><a href="index.html#about">Sobre mí</a></li>
+      <li><a href="index.html#work" class="active">Proyectos</a></li>
+      <li><a href="index.html#contact">Contacto</a></li>
+    </ul>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="project-hero" id="top">
+  <div class="project-hero-bg">
+    <img src="img/hero-nahuel.jpg" alt="Residencial Nahuel" onerror="this.style.display='none'">
+<svg class="hero-deco-svg" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <path d="M110.793 57.7163C233.78 -31.8199 356.03 4.77098 412.8 27.703C444.405 40.4701 476.65 46.6644 513.566 53.0744C553.36 59.9841 581.745 61.987 637.859 58.7066C661.76 57.3093 714.797 54.4154 767.284 90.4708C809.274 119.315 830.325 167.149 834.071 186.679C839.11 215.782 843.619 261.45 813.743 304.812C785.599 345.661 719.301 397.985 677.439 422.594C630.619 450.118 569.014 474.958 532.705 483.276C471.998 497.184 444.652 503.985 403.686 503.626C372.617 503.353 357.917 490.951 321.172 496.746C268.123 505.114 269.349 524.813 236.622 529.975C214.055 533.535 155.57 530.368 84.1571 476.609C20.2349 428.488 1.45244 325.618 1.02461 282.489C-2.79762 235.878 12.4023 129.345 110.793 57.7163Z"
+        transform="translate(480,80) scale(1.05)"
+        fill="rgba(183,146,102,0.05)" stroke="rgba(183,146,102,0.10)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M110.793 57.7163C233.78 -31.8199 356.03 4.77098 412.8 27.703C444.405 40.4701 476.65 46.6644 513.566 53.0744C553.36 59.9841 581.745 61.987 637.859 58.7066C661.76 57.3093 714.797 54.4154 767.284 90.4708C809.274 119.315 830.325 167.149 834.071 186.679C839.11 215.782 843.619 261.45 813.743 304.812C785.599 345.661 719.301 397.985 677.439 422.594C630.619 450.118 569.014 474.958 532.705 483.276C471.998 497.184 444.652 503.985 403.686 503.626C372.617 503.353 357.917 490.951 321.172 496.746C268.123 505.114 269.349 524.813 236.622 529.975C214.055 533.535 155.57 530.368 84.1571 476.609C20.2349 428.488 1.45244 325.618 1.02461 282.489C-2.79762 235.878 12.4023 129.345 110.793 57.7163Z"
+        transform="translate(600,160) scale(0.70)"
+        fill="rgba(148,99,53,0.04)" stroke="rgba(148,99,53,0.09)" stroke-width="1.0" stroke-linejoin="round"/>
+  <path d="M110.793 57.7163C233.78 -31.8199 356.03 4.77098 412.8 27.703C444.405 40.4701 476.65 46.6644 513.566 53.0744C553.36 59.9841 581.745 61.987 637.859 58.7066C661.76 57.3093 714.797 54.4154 767.284 90.4708C809.274 119.315 830.325 167.149 834.071 186.679C839.11 215.782 843.619 261.45 813.743 304.812C785.599 345.661 719.301 397.985 677.439 422.594C630.619 450.118 569.014 474.958 532.705 483.276C471.998 497.184 444.652 503.985 403.686 503.626C372.617 503.353 357.917 490.951 321.172 496.746C268.123 505.114 269.349 524.813 236.622 529.975C214.055 533.535 155.57 530.368 84.1571 476.609C20.2349 428.488 1.45244 325.618 1.02461 282.489C-2.79762 235.878 12.4023 129.345 110.793 57.7163Z"
+        transform="translate(680,205) scale(0.46)"
+        fill="none" stroke="rgba(26,29,46,0.08)" stroke-width="0.9" stroke-linejoin="round" stroke-dasharray="5,6"/>
+</svg>
+  </div>
+  <div class="project-hero-inner">
+    <div class="project-hero-chip">Diseño Industrial · Ergonomía · Trabajo Final de Grado</div>
+    <h1 class="project-hero-title">
+      Residencial
+      <strong>Nahuel.</strong>
+    </h1>
+    <p class="project-hero-sub">Dos dispositivos de apoyo para mejorar la experiencia de alimentación de adultos mayores, adaptados al mobiliario existente en un residencial del barrio Prado, Montevideo.</p>
+    <div class="project-hero-meta">
+      <div class="meta-item"><span class="meta-label">Disciplina</span><span class="meta-value">Diseño Industrial</span></div>
+      <div class="meta-item"><span class="meta-label">Contexto</span><span class="meta-value">Trabajo Final de Grado · EUCD FADU Udelar</span></div>
+      <div class="meta-item"><span class="meta-label">Año</span><span class="meta-value">2025</span></div>
+      <div class="meta-item"><span class="meta-label">Colaboración</span><span class="meta-value">Valentina Varela</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTENIDO -->
+<div class="content-root">
+<div class="case-wrap">
+
+  <!-- 01 CONTEXTO -->
+  <section class="cs-section" id="contexto">
+    <span class="cs-section-num">01</span>
+    <div class="cs-label slide-in from-left">01 · El contexto</div>
+    <h2 class="cs-title slide-in from-left si-d1"><em>¿De dónde</em> surge el proyecto?</h2>
+    <p class="cs-body slide-in from-left si-d2">En el marco del proyecto final de grado, se trabajó a partir de una problemática identificada en el <strong>Residencial Nahuel</strong>, un hogar para adultos mayores ubicado en el barrio Prado de Montevideo. El lugar cuenta con 26 residentes con distintos niveles de autonomía y un comedor equipado con mobiliario de diferentes tipologías.</p>
+    <p class="cs-body slide-in from-left si-d3">Durante las primeras visitas se observaron algunas dificultades relacionadas con la alimentación, como alcanzar los alimentos, manipular los utensilios y mantener una postura cómoda durante las comidas. El mobiliario existente no contemplaba específicamente las necesidades de los residentes, por lo que se planteó el <strong>diseño de dos dispositivos de apoyo</strong> para incorporar al espacio, adaptados al mobiliario existente y orientados a facilitar la experiencia de alimentación de los residentes.</p>
+    <div class="cs-highlight slide-in from-left si-d4">
+      <p>"Algunos residentes necesitan ayuda para <span>alcanzar los elementos de la mesa o acomodarse durante las comidas.</span>"<br><small style="font-size:13px;color:var(--text3);font-style:normal;font-family:var(--font-body);margin-top:8px;display:block;">— Personal del residencial, entrevista en territorio</small></p>
+    </div>
+
+  </section>
+
+</div><!-- /case-wrap — cierre temporal para galería full-width -->
+
+<!-- GALERÍA CONTEXTO — bento asimétrico full-width -->
+<div class="bento-gallery slide-in from-bottom">
+  <!-- imagen grande vertical izquierda -->
+  <div class="bg-item tall">
+    <img src="img/residencial-bento-1.png" alt="Interior del Residencial Nahuel" onerror="this.style.display='none'">
+    <div class="bi-label">Exterior del Residencial Nahuel</div>
+  </div>
+  <!-- fila superior derecha -->
+  <div class="bg-item">
+    <img src="img/residencial-bento-2.png" alt="Comedor del residencial" onerror="this.style.display='none'">
+    <div class="bi-label">Comedor y zona de alimentación</div>
+  </div>
+  <div class="bg-item">
+    <img src="img/residencial-bento-3.png" alt="Mobiliario existente" onerror="this.style.display='none'">
+    <div class="bi-label">Comedor y zona de alimentación</div>
+  </div>
+  <!-- fila inferior derecha wide -->
+  <div class="bg-item wide">
+    <img src="img/residencial-bento-4.png" alt="Etapa de observación" onerror="this.style.display='none'">
+    <div class="bi-label">Comedor y zona de alimentación</div>
+  </div>
+</div>
+
+<div class="case-wrap">
+
+  <!-- 02 PROCESO -->
+  <section class="cs-section" id="proceso">
+    <span class="cs-section-num">02</span>
+    <div class="cs-label slide-in from-right">02 · Proceso</div>
+    <h2 class="cs-title slide-in from-right si-d1"><em>Cómo llegamos</em> a la solución</h2>
+    <p class="cs-body slide-in from-right si-d2">El proceso tomó como referencia la metodología de <strong>Design Thinking</strong>, con foco en la observación directa y la comprensión real del contexto antes de pasar a proponer cualquier solución.</p>
+
+    <div class="dt-wrapper slide-in from-bottom si-d3">
+      <div class="dt-tabs">
+        <button class="dt-tab active" data-panel="0">Empatizar</button>
+        <button class="dt-tab" data-panel="1">Definir</button>
+        <button class="dt-tab" data-panel="2">Idear</button>
+        <button class="dt-tab" data-panel="3">Desarrollar</button>
+        <button class="dt-tab" data-panel="4">Prototipar</button>
+      </div>
+
+      <div class="dt-panel active" data-panel="0">
+        <div class="dt-panel-text">
+          <div class="dt-panel-label">Etapa 01</div>
+          <div class="dt-panel-title">Empatizar</div>
+          <div class="dt-panel-body">
+            <p>Durante las primeras visitas al residencial observamos las dinámicas durante las comidas, prestando atención a cómo los residentes se relacionaban con el mobiliario, sus posturas y las dificultades que surgían durante la alimentación. También realizamos entrevistas a tres personas del personal de asistencia para complementar lo observado.</p>
+            <p style="margin-top:12px;">Para analizar las situaciones registradas, utilizamos la herramienta <strong>"Qué, Cómo y Porqué"</strong> sobre fotografías tomadas durante el relevamiento. Esto nos permitió organizar las observaciones y profundizar en algunos de los aspectos relacionados con el uso del espacio y el mobiliario.</p>
+          </div>
+        </div>
+        <div class="dt-panel-img">
+          <!-- IMAGEN: observación en territorio -->
+          <img src="img/proceso-empatizar.png" alt="Observación en el residencial" onerror="this.style.display='none'">
+          <div class="dt-panel-img-label">Observación en territorio</div>
+        </div>
+      </div>
+
+      <div class="dt-panel" data-panel="1">
+        <div class="dt-panel-text">
+          <div class="dt-panel-label">Etapa 02</div>
+          <div class="dt-panel-title">Definir</div>
+          <div class="dt-panel-body">
+            <p>A partir de las entrevistas y las observaciones realizadas, se identificaron distintas problemáticas vinculadas a la alimentación, como <strong>alcances insuficientes, alturas inadecuadas, caídas de objetos y posturas forzadas</strong>. A partir de ahí definimos los requisitos que el dispositivo debía cumplir sí o sí.</p>
+            <p style="margin-top:12px;">Entre los aspectos identificados se encontraron:</p>
+            <ul>
+              <li>Seis residentes no pueden alimentarse solos</li>
+              <li>Muchos necesitan ayuda para ubicarse en la mesa correctamente</li>
+              <li>Algunos usan botellas con sorbito por dificultades de control motriz</li>
+              <li>Se observan caídas de platos y utensilios durante las comidas</li>
+              <li>El mobiliario no se adapta a las distintas necesidades posturales</li>
+            </ul>
+          </div>
+        </div>
+        <div class="dt-panel-img">
+          <!-- IMAGEN: síntesis / definición -->
+          <img src="img/proceso-definir.png" alt="Etapa de definición" onerror="this.style.display='none'">
+          <div class="dt-panel-img-label">Síntesis de hallazgos</div>
+        </div>
+      </div>
+
+      <div class="dt-panel" data-panel="2">
+        <div class="dt-panel-text">
+          <div class="dt-panel-label">Etapa 03</div>
+          <div class="dt-panel-title">Idear</div>
+          <div class="dt-panel-body">
+            <p>Usamos la herramienta<strong>brainstorming</strong> para generar una variedad de propuestas. Las ideas se evaluaron en función de los requisitos definidos en la etapa anterior.</p>
+            <p style="margin-top:12px;">A partir de este proceso, se definió desarrollar un <strong>dispositivo tipo bandeja adaptable al mobiliario existente</strong>, evitando la necesidad de reemplazar mesas o sillas. La propuesta se planteó en dos versiones, adaptadas a los distintos tipos de asiento presentes en el residencial.</p>
+          </div>
+        </div>
+        <div class="dt-panel-img">
+          <!-- IMAGEN: sketches / brainstorming -->
+          <img src="img/proceso-idear.png" alt="Sketches de ideación" onerror="this.style.display='none'">
+          <div class="dt-panel-img-label">Exploración de alternativas</div>
+        </div>
+      </div>
+
+      <div class="dt-panel" data-panel="3">
+        <div class="dt-panel-text">
+          <div class="dt-panel-label">Etapa 04</div>
+          <div class="dt-panel-title">Desarrollar</div>
+          <div class="dt-panel-body">
+            <p>Una vez definidas las dos alternativas, comenzó el desarrollo técnico: materiales, mecanismos de regulación y fijación, documentación técnica con planos y vistas detalladas, y medidas justificadas con datos antropométricos tomados en el propio residencial.</p>
+            <p style="margin-top:12px;">También se desarrollaron <strong>situaciones de uso y no uso</strong> para asegurar que el dispositivo funcionara correctamente tanto para los residentes que lo usan solos como para el personal que los asiste.</p>
+          </div>
+        </div>
+        <div class="dt-panel-img">
+          <!-- IMAGEN: desarrollo técnico / CAD -->
+          <img src="img/proceso-desarrollar.png" alt="Desarrollo técnico" onerror="this.style.display='none'">
+          <div class="dt-panel-img-label">Modelado técnico en Fusion 360</div>
+        </div>
+      </div>
+
+      <div class="dt-panel" data-panel="4">
+        <div class="dt-panel-text">
+          <div class="dt-panel-label">Etapa 05</div>
+          <div class="dt-panel-title">Prototipar y evaluar</div>
+          <div class="dt-panel-body">
+            <p>El proceso incluyó simuladores en <strong>2D para explorar dimensiones de ancho y largo</strong>, y en <strong>3D para evaluar distintas alturas</strong>. La viabilidad de las propuestas se evaluó en función de criterios antropométricos y con la devolución de una profesional del rubro de diseño industrial.</p>
+            <p style="margin-top:12px;">Este proceso iterativo permitió validar los aspectos clave del diseño y detectar oportunidades de mejora antes de cerrar la propuesta final.</p>
+          </div>
+        </div>
+        <div class="dt-panel-img">
+          <!-- IMAGEN: simuladores / prototipo -->
+          <img src="img/proceso-prototipar.png" alt="Simuladores y prototipo" onerror="this.style.display='none'">
+          <div class="dt-panel-img-label">Simuladores 2D y 3D</div>
+        </div>
+      </div>
+    </div><!-- /dt-wrapper -->
+  </section>
+
+  <!-- 03 LAS DOS TIPOLOGÍAS -->
+  <section class="cs-section" id="tipologias">
+    <span class="cs-section-num">03</span>
+    <div class="cs-label slide-in from-left">03 · Las dos tipologías</div>
+    <h2 class="cs-title slide-in from-left si-d1"><em>Una bandeja,</em> dos soluciones</h2>
+    <p class="cs-body slide-in from-left si-d2">El proyecto contempla dos dispositivos que comparten la misma bandeja, pero se diferencian en su sistema de soporte. Las dos tipologías fueron desarrolladas a partir de los distintos tipos de asientos presentes en el comedor del residencial.</p>
+
+    <div class="tipologias-grid slide-in from-bottom si-d3">
+      <div class="tip-card">
+        <div class="tip-card-img">
+          <!-- IMAGEN: tipología A en uso -->
+          <img src="img/tipologia2.png" alt="Bandeja con patas regulables" onerror="this.style.display='none'">
+          <div class="tip-card-badge">Tipología A</div>
+        </div>
+        <div class="tip-card-body">
+          <div class="tip-card-title">Bandeja con patas regulables</div>
+          <div class="tip-card-desc">Pensada para <strong>sillas convencionales</strong>. Funciona como una mesa pequeña autoportante que se ubica frente al usuario. Sus dos patas tubulares tienen un sistema telescópico que permite ajustar la altura entre <strong>60 y 66 cm</strong>, con seis variantes de medida para adaptarse a distintos usuarios. La bandeja se acopla a las patas mediante rosca, lo que permite desmontarla fácilmente cuando no se necesita.</div>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-card-img">
+          <!-- IMAGEN: tipología B en uso -->
+          <img src="img/tipologia1.png" alt="Bandeja con sistema de sujeción" onerror="this.style.display='none'">
+          <div class="tip-card-badge">Tipología B</div>
+        </div>
+        <div class="tip-card-body">
+          <div class="tip-card-title">Bandeja con sujeción al apoyabrazos</div>
+          <div class="tip-card-desc">Diseñada específicamente para los <strong>sillones del área común</strong>. Se fija al apoyabrazos mediante una abrazadera en forma de U invertida, sin necesidad de apoyo al suelo. Tiene un sistema telescópico de 3 puntos con traba manual, un riel de desplazamiento frontal por fricción de silicona, y un mecanismo de rotación de 180° en la parte superior que permite colocarlo de cualquier lado del sillón.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANDEJA — detalle compartido -->
+    <div class="cs-label slide-in from-left" style="margin-top:40px;">La bandeja</div>
+    <h3 class="cs-title slide-in from-left si-d1" style="font-size:clamp(20px,2.5vw,28px);"><em>El componente</em> en común</h3>
+    <p class="cs-body slide-in from-left si-d2">Ambas tipologías comparten la misma bandeja: una superficie de forma envolvente y curva, sin bordes filosos, con varios componentes integrados que responden a las necesidades concretas del entorno.</p>
+
+    <div class="mec-block slide-in from-bottom si-d3">
+      <div class="mec-header">
+        <div class="mec-header-title">Anatomía de la bandeja</div>
+        <div class="mec-header-sub">54 cm × 36 cm · Forma envolvente y curva · Componentes integrados</div>
+      </div>
+      <div class="mec-inner">
+        <div class="mec-img">
+          <!-- IMAGEN: render o foto de la bandeja sola, vista superior -->
+          <img src="img/bandejageneral.png" alt="Bandeja — vista detalle" onerror="this.style.display='none'">
+        </div>
+        <div class="mec-annotations">
+          <div class="mec-anno">
+            <div class="mec-dot"></div>
+            <div>
+              <div class="mec-anno-title">Porta plato con inclinación</div>
+              <div class="mec-anno-desc">Diámetro interno de 12 cm, con ligera inclinación para que el plato entre correctamente. Mantieniendo el plato firme incluso ante pequeños movimientos.</div>
+            </div>
+          </div>
+          <div class="mec-anno">
+            <div class="mec-dot"></div>
+            <div>
+              <div class="mec-anno-title">Porta vaso</div>
+              <div class="mec-anno-desc">Diámetro interno de 9 cm, relevado a partir de los vasos y botellas realmente usados en el residencial (bases de 8 a 8,8 cm).</div>
+            </div>
+          </div>
+          <div class="mec-anno">
+            <div class="mec-dot"></div>
+            <div>
+              <div class="mec-anno-title">Tapa con muesca semicircular</div>
+              <div class="mec-anno-desc">La tapa permite cubrir el espacio destinado al plato cuando no está en uso, dejando la superficie de la bandeja libre para otras actividades. Pensada para levantarse facilmente con el dedo índice.</div>
+            </div>
+          </div>
+          <div class="mec-anno">
+            <div class="mec-dot"></div>
+            <div>
+              <div class="mec-anno-title">Superficie envolvente</div>
+              <div class="mec-anno-desc">La forma curva permite el acceso desde distintos ángulos y evita aristas que puedan incomodar o representar un riesgo para los residentes.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 ERGONOMÍA -->
+  <section class="cs-section" id="ergonomia">
+    <span class="cs-section-num">04</span>
+    <div class="cs-label slide-in from-right">04 · Ergonomía</div>
+    <h2 class="cs-title slide-in from-right si-d1"><em>Medidas pensadas</em> para personas reales</h2>
+    <p class="cs-body slide-in from-right si-d2">Cada dimensión del producto tiene una justificación. Los datos antropométricos se tomaron de los propios residentes y del mobiliario real del espacio, tomando como referencia a Panero y Zelnik (1996) para las dimensiones funcionales en posición sentada.</p>
+
+    <div class="ergo-grid slide-in from-bottom si-d3">
+      <div class="ergo-card">
+        <div class="ergo-dim">54 cm</div>
+        <div class="ergo-label">Ancho de la bandeja</div>
+        <div class="ergo-desc">Basado en el ancho entre codos en posición sentada, tomando el percentil 95 (50 cm) de los residentes. Asegura libertad de movimiento incluso para quien adopta una postura más abierta.</div>
+        <div class="ergo-ref">Ref: ancho entre codos, P95 · Panero y Zelnik</div>
+      </div>
+      <div class="ergo-card">
+        <div class="ergo-dim">36 cm</div>
+        <div class="ergo-label">Profundidad de la bandeja</div>
+        <div class="ergo-desc">Basado en el alcance de brazo, tomando el percentil 5 (36 cm). Garantiza que incluso quien tiene menor alcance pueda llegar al fondo de la bandeja sin inclinarse.</div>
+        <div class="ergo-ref">Ref: alcance de brazo, P5 · Panero y Zelnik</div>
+      </div>
+      <div class="ergo-card">
+        <div class="ergo-dim">60–66 cm</div>
+        <div class="ergo-label">Rango de altura regulable (Tip. A)</div>
+        <div class="ergo-desc">Determinado a partir de la altura del codo en posición sentada de los residentes, con 6 variantes de posición para adaptarse a distintos usuarios.</div>
+        <div class="ergo-ref">Ref: altura de codo sentado · medición in situ</div>
+      </div>
+      <div class="ergo-card">
+        <div class="ergo-dim">9 cm</div>
+        <div class="ergo-label">Diámetro interno del porta vaso</div>
+        <div class="ergo-desc">Relevado a partir de los vasos y botellas realmente usados en el residencial. Las bases medían entre 8 y 8,8 cm, por lo que se definió 9 cm para un ajuste seguro con margen.</div>
+        <div class="ergo-ref">Ref: relevamiento de objetos in situ</div>
+      </div>
+      <div class="ergo-card">
+        <div class="ergo-dim">12 cm</div>
+        <div class="ergo-label">Diámetro interno del porta plato</div>
+        <div class="ergo-desc">Definido en relación al plato estándar del residencial (base de 11,8 cm). Se incorporó una ligera inclinación para que el plato asiente completamente y no se mueva.</div>
+        <div class="ergo-ref">Ref: plato estándar del residencial</div>
+      </div>
+      <div class="ergo-card">
+        <div class="ergo-dim">10–22 cm</div>
+        <div class="ergo-label">Apertura de abrazadera (Tip. B)</div>
+        <div class="ergo-desc">Rango de apertura de la abrazadera de sujeción al apoyabrazos, definido a partir de las dimensiones reales de los distintos sillones existentes en el residencial.</div>
+        <div class="ergo-ref">Ref: medición de apoyabrazos in situ</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 CONSTRUCTIVO -->
+  <section class="cs-section" id="constructivo">
+    <span class="cs-section-num">05</span>
+    <div class="cs-label slide-in from-left">05 · Detalles constructivos</div>
+    <h2 class="cs-title slide-in from-left si-d1"><em>Cómo está</em> construido</h2>
+    <p class="cs-body slide-in from-left si-d2">La documentación técnica incluye alzados, plantas, vistas de detalle y explotadas de ensamblaje para ambas tipologías. Los soportes están fabricados en <strong>acero inoxidable</strong> con esmalte poliuretánico a base de agua, un acabado elegido por su resistencia a la limpieza frecuente y la humedad, lo que es importante en este entorno.</p>
+
+    <!-- Mecanismo Tipología A -->
+    <div class="mec-block slide-in from-bottom si-d3">
+      <div class="mec-header">
+        <div class="mec-header-title">Tipología A — Sistema telescópico de patas</div>
+        <div class="mec-header-sub">Dos patas tubulares · Regulación por telescopio · Acople roscado a la bandeja</div>
+      </div>
+      <div class="mec-inner">
+<div class="mec-img-bento">
+  <div class="bi tall">
+    <img src="img/mecanismo-tipologia-a.png" alt="Tipología A — Vista principal">
+    <div class="bi-label">Vista general</div>
+  </div>
+  <div class="bi">
+    <img src="img/tip-a-telescopico.png" alt="Detalle telescópico">
+    <div class="bi-label">Sistema telescópico</div>
+  </div>
+  <div class="bi">
+    <img src="img/tip-a-roscado.png" alt="Detalle rosca">
+    <div class="bi-label">Acople roscado</div>
+  </div>
+</div>
+        <div class="mec-annotations">
+          <div class="mec-anno">
+            <div class="mec-dot"></div>
+            <div>
+              <div class="mec-anno-title">Patas tubulares inclinadas</div>
+              <div class="mec-anno-desc">Dos patas con forma ligeramente inclinada hacia afuera para mayor estabilidad. El sistema telescópico permite regular la altura en 6 posiciones.</div>
+            </div>
+          </div>
+          <div class="mec-anno">
+            <div class="mec-dot"></div>
+            <div>
+              <div class="mec-anno-title">Acople roscado bandeja–patas</div>
+              <div class="mec-anno-desc">La base de la bandeja tiene dos orificios roscados de 3 cm que se acoplan directamente con la rosca en la parte superior de las patas, generando una unión firme y desmontable.</div>
+            </div>
+          </div>
+          <div class="mec-anno">
+            <div class="mec-dot"></div>
+            <div>
+              <div class="mec-anno-title">Sistema desmontable</div>
+              <div class="mec-anno-desc">La bandeja puede retirarse de las patas fácilmente, lo que optimiza el almacenamiento y facilita la limpieza tanto para el personal como para los propios residentes.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mecanismo Tipología B -->
+    <div class="mec-block slide-in from-bottom si-d3" style="margin-top:16px;">
+      <div class="mec-header">
+        <div class="mec-header-title">Tipología B — Sistema de sujeción al apoyabrazos</div>
+        <div class="mec-header-sub">Abrazadera en U invertida · Telescópico de 3 puntos · Riel deslizante · Rotación 180°</div>
+      </div>
+      <div class="mec-inner">
+<div class="mec-img-bento">
+    <div class="bi">
+    <img src="img/tip-b-abrazadera.png" alt="Detalle rosca">
+    <div class="bi-label">Abrazadera</div>
+  </div>
+  <div class="bi">
+    <img src="img/tip-b-telescopico.png" alt="Tipología B — Vista principal">
+    <div class="bi-label">Sistema telescópico</div>
+  </div>
+  <div class="bi">
+    <img src="img/tip-b-riel.png" alt="Detalle abrazadera">
+    <div class="bi-label">Riel deslizante</div>
+  </div>
+  <div class="bi">
+    <img src="img/tip-b-giro.png" alt="Detalle riel">
+    <div class="bi-label">Rotacion 180°</div>
+  </div>
+</div>
+        <div class="mec-annotations">
+          <div class="mec-anno">
+            <div class="mec-dot"></div>
+            <div>
+              <div class="mec-anno-title">Abrazadera con resorte y tope</div>
+              <div class="mec-anno-desc">La abrazadera en U invertida funciona internamente con un resorte y tope de seguridad que permiten abrirla y cerrarla. Se ajusta a apoyabrazos de 10 a 22 cm de ancho.</div>
+            </div>
+          </div>
+          <div class="mec-anno">
+            <div class="mec-dot"></div>
+            <div>
+              <div class="mec-anno-title">Brazo telescópico de 3 puntos</div>
+              <div class="mec-anno-desc">Permite extender o retraer la altura del dispositivo con una traba manual. El caño tiene una diferencia de 4 cm respecto a la superficie del sillón y 19,5 cm de altura, para que las piernas del usuario queden cómodas debajo.</div>
+            </div>
+          </div>
+          <div class="mec-anno">
+            <div class="mec-dot"></div>
+            <div>
+              <div class="mec-anno-title">Riel deslizante por fricción de silicona</div>
+              <div class="mec-anno-desc">Permite ajustar la posición de la bandeja hacia adelante o atrás para distintos alcances. El sistema usa tiras de silicona en los bordes del riel que generan la resistencia necesaria para mantener la posición sin bloquear el movimiento intencional.</div>
+            </div>
+          </div>
+          <div class="mec-anno">
+            <div class="mec-dot"></div>
+            <div>
+              <div class="mec-anno-title">Rotación 180° en el caño superior</div>
+              <div class="mec-anno-desc">Permite colocar el dispositivo de cualquier lado del sillón sin necesidad de dar vuelta toda la estructura. El tope es encastrable para facilitar el guardado.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Material -->
+    <div class="mat-block slide-in from-bottom si-d4">
+      <div class="mat-card">
+        <div class="mat-card-label">Material de soporte</div>
+        <div class="mat-card-title">Acero inoxidable</div>
+        <div class="mat-card-body">Se propone el uso de acero inoxidable para la estructura de soporte, considerando su <strong>resistencia a la corrosión, durabilidad y facilidad de mantenimiento.</strong> El material no requiere un recubrimiento para protegerse de la corrosión, pero se plantea un acabado para aportar el tratamiento y la terminación visual buscada en el proyecto.</div>
+      </div>
+      <div class="mat-card">
+        <div class="mat-card-label">Acabado superficial</div>
+        <div class="mat-card-title">Esmalte poliuretánico alifático</div>
+        <div class="mat-card-body">A base de agua, sin solventes tóxicos. Resiste rayos UV, abrasión y limpieza frecuente. <strong>Color: tono claro para la estructura</strong>, con trabas en marrón para que sean visualmente identificables tanto por residentes como por el personal.</div>
+      </div>
+    </div>
+
+    <div class="download-wrap slide-in from-bottom si-d4">
+      <a href="#" class="download-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descargar documentación técnica
+      </a>
+      <span class="download-hint">Planos, memorias y vistas detalladas — PDF</span>
+    </div>
+  </section>
+
+
+
+  <!-- 06 RESULTADO FINAL -->
+  <section class="cs-section" id="resultado">
+    <span class="cs-section-num">06</span>
+    <div class="cs-label slide-in from-left">06 · Resultado final</div>
+    <h2 class="cs-title slide-in from-left si-d1"><em>Los dispositivos</em> en contexto</h2>
+    <p class="cs-body slide-in from-left si-d2">El resultado son dos dispositivos complementarios que se integran al mobiliario existente sin modificarlo. Los renders muestran ambas tipologías en situaciones de uso.</p>
+  </section>
+
+</div><!-- /case-wrap -->
+
+<!-- GALERÍA RESULTADO FINAL full-width -->
+<div class="result-fullwidth slide-in from-bottom">
+  <div class="result-row1">
+    <div class="r-img">
+      <!-- IMAGEN: render principal / situación de uso -->
+      <img src="img/render-nahuel-principal.png" alt="Situación de uso — Tipología A" onerror="this.parentElement.style.minHeight='340px'">
+      <div class="r-label">Tipologias A y B</div>
+    </div>
+    <div class="r-img">
+      <!-- IMAGEN: render tipología B -->
+      <img src="img/render-tipologias-uso.png" alt="Situación de uso — Tipología B" onerror="this.parentElement.style.minHeight='340px'">
+      <div class="r-label">Tipologias en uso</div>
+    </div>
+  </div>
+  <div class="result-row2">
+    <div class="r-img">
+      <!-- IMAGEN: detalle bandeja -->
+      <img src="img/render-tipologias-a.png" alt="Detalle de la bandeja" onerror="this.parentElement.style.minHeight='200px'">
+      <div class="r-label">Tipología A</div>
+    </div>
+    <div class="r-img">
+      <!-- IMAGEN: detalle mecanismo -->
+      <img src="img/render-tipologias-b.png" alt="Detalle del mecanismo" onerror="this.parentElement.style.minHeight='200px'">
+      <div class="r-label">Tipología B</div>
+    </div>
+    <div class="r-img">
+      <!-- IMAGEN: ambas tipologías juntas -->
+      <img src="img/render-tipologias-uso-2.png" alt="Ambas tipologías" onerror="this.parentElement.style.minHeight='200px'">
+      <div class="r-label">Tipología A en uso</div>
+    </div>
+  </div>
+</div>
+
+<div class="case-wrap">
+
+  <!-- 07 REFLEXIÓN -->
+  <section class="cs-section" id="reflexion">
+    <span class="cs-section-num">07</span>
+    <div class="cs-label slide-in from-right">07 · Reflexión</div>
+    <h2 class="cs-title slide-in from-right si-d1"><em>Lo que nos dejó</em> este proyecto</h2>
+    <div class="reflection-block slide-in from-bottom si-d2">
+      <p>Este proyecto nos permitió trabajar de principio a fin sobre una problemática concreta, desde el relevamiento en el residencial hasta el desarrollo de una propuesta de diseño. El contacto con los residentes, el personal y el contexto de uso nos ayudó a entender la importancia de considerar <span>las necesidades de las personas y las características del entorno</span> a lo largo de todo el proceso. También nos permitió poner en práctica herramientas de investigación, análisis y desarrollo de producto, tomando decisiones a partir de lo observado y de los requisitos definidos durante el proyecto.</p>
+    </div>
+  </section>
+
+</div><!-- /case-wrap -->
+
+<!-- NAV ENTRE PROYECTOS -->
+<div class="project-nav">
+  <a href="proyecto-cultura-en-tu-barrio.html" class="pnb prev">
+    <span class="pnb-arrow">←</span>
+    <div><div class="pnb-label">Proyecto anterior</div><div class="pnb-title">Cultura en tu Barrio</div></div>
+  </a>
+  <a href="proyecto-almacenamiento-modular.html" class="pnb next">
+    <div><div class="pnb-label">Siguiente proyecto</div><div class="pnb-title">Almacenamiento Modular</div></div>
+    <span class="pnb-arrow">→</span>
+  </a>
+</div>
+
+</div><!-- /content-root -->
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">Serrana Corbo</span>
+  <div class="footer-icons">
+    <a href="https://www.linkedin.com/in/serrana-corbo-a5436225b/" target="_blank" class="footer-icon" aria-label="LinkedIn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+    <a href="#" class="footer-icon" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    <a href="#" class="footer-icon" aria-label="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+  </div>
+  <span class="footer-tagline">Diseño Industrial + UX · UI</span>
+</footer>
+
+<script>
+// CURSOR
+var dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing'),mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function ar(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ar);})();
+document.querySelectorAll('a,button,.tip-card,.ergo-card,.mat-card,.r-img,.bg-item,.c-img,.pnb,.download-btn').forEach(function(el){
+  el.addEventListener('mouseenter',function(){ring.classList.add('hovering');});
+  el.addEventListener('mouseleave',function(){ring.classList.remove('hovering');});
+});
+
+// READING BAR
+var bar=document.getElementById('readingBar');
+window.addEventListener('scroll',function(){
+  var t=document.body.scrollHeight-window.innerHeight;
+  if(t>0) bar.style.width=(window.scrollY/t*100)+'%';
+},{passive:true});
+
+// NAVBAR
+var hdr=document.getElementById('siteHeader');
+window.addEventListener('scroll',function(){hdr.classList.toggle('scrolled',window.scrollY>30);},{passive:true});
+
+// SLIDE-IN
+var slideObs=new IntersectionObserver(function(e){
+  e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');slideObs.unobserve(x.target);}});
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.slide-in').forEach(function(el){slideObs.observe(el);});
+
+// PROGRESS DOTS
+var sections=document.querySelectorAll('section[id]');
+var dots=document.querySelectorAll('.sp-dot');
+dots.forEach(function(d){
+  d.addEventListener('click',function(){
+    var el=document.getElementById(d.getAttribute('data-target'));
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+window.addEventListener('scroll',function(){
+  var cur='';sections.forEach(function(s){if(window.scrollY>=s.offsetTop-200) cur=s.id;});
+  dots.forEach(function(d){d.classList.toggle('active',d.getAttribute('data-target')===cur);});
+},{passive:true});
+
+// DT TABS
+var tabs=document.querySelectorAll('.dt-tab');
+var panels=document.querySelectorAll('.dt-panel');
+tabs.forEach(function(tab){
+  tab.addEventListener('click',function(){
+    var idx=this.getAttribute('data-panel');
+    tabs.forEach(function(t){t.classList.remove('active');});
+    panels.forEach(function(p){p.classList.remove('active');});
+    this.classList.add('active');
+    document.querySelector('.dt-panel[data-panel="'+idx+'"]').classList.add('active');
+  });
+});
+
+// HAMBURGER MENU
+var hamburger=document.getElementById('navHamburger');
+var overlay=document.getElementById('navOverlay');
+var panel=document.getElementById('navPanel');
+function openMenu(){hamburger.classList.add('open');overlay.classList.add('open');panel.classList.add('open');document.body.style.overflow='hidden';}
+function closeMenu(){hamburger.classList.remove('open');overlay.classList.remove('open');panel.classList.remove('open');document.body.style.overflow='';}
+hamburger.addEventListener('click',function(){this.classList.contains('open')?closeMenu():openMenu();});
+overlay.addEventListener('click',closeMenu);
+document.querySelectorAll('.nav-mobile-link').forEach(function(a){a.addEventListener('click',closeMenu);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});
+</script>
+</body>
+</html>

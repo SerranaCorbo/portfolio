@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+<head>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cultura en tu Barrio — Serrana Corbo</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F0F2F8;--bg2:#E8ECF5;--bg-warm:#F5F4F0;
+  --surface:rgba(255,255,255,0.68);--border:rgba(255,255,255,0.88);
+  --border-sm:rgba(180,190,220,0.32);
+  --shadow:0 8px 32px rgba(100,120,200,0.10);
+  --shadow-lg:0 20px 64px rgba(80,100,180,0.16);
+  --cyan:#0891B2;--lav:#7C3AED;
+  --vio:#673F8E;--vio-dk:#4e2f6b;--vio-lt:#f0e8f7;
+--yel:#FCFF56;
+--grad-vio:linear-gradient(135deg,#673F8E 0%,#4e2f6b 100%);
+  --text:#1A1D2E;--text2:#4B5563;--text3:#9CA3AF;
+  --white:#FFFFFF;--dark:#1A1D2E;
+  --grad:linear-gradient(135deg,#0891B2 0%,#7C3AED 100%);
+  --font-serif:'DM Serif Display',serif;
+  --font-title:'Satoshi',sans-serif;
+  --font-body:'Manrope',sans-serif;
+  
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg-warm);color:var(--text);font-family:var(--font-body);overflow-x:hidden;cursor:none;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");opacity:.35;mix-blend-mode:multiply;}
+
+.reading-bar{position:fixed;top:0;left:0;height:2.5px;width:0%;background:var(--grad-vio);z-index:500;pointer-events:none;}
+.cursor-dot{width:6px;height:6px;border-radius:50%;background:var(--vio);position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .18s,height .18s;}
+.cursor-ring{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(103,63,142,0.35);position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .22s,height .22s,border-color .22s;}
+.cursor-ring.hovering{width:46px;height:46px;border-color:rgba(103,63,142,0.6);}
+@media(hover:none){body{cursor:auto;}.cursor-dot,.cursor-ring{display:none;}}
+
+/* ── NAVBAR ── */
+header{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(245,244,240,0.85);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border-bottom:1px solid var(--border-sm);transition:box-shadow .3s;}
+header.scrolled{box-shadow:0 4px 32px rgba(80,100,180,0.10);}
+nav{max-width:1280px;margin:0 auto;display:flex;align-items:center;padding:0 60px;height:72px;}
+.nav-logo-slot{display:flex;align-items:center;justify-content:center;width:40px;height:40px;flex-shrink:0;border:none dashed rgba(124,58,237,0.28);border-radius:8px;color:var(--text3);font-family:var(--font-body);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:border-color .25s,color .25s;}
+.nav-logo-slot:hover{border-color:var(--lav);color:var(--lav);}
+.nav-logo-slot img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+.nav-links{display:flex;gap:36px;list-style:none;margin-left:auto;}
+.nav-links a{font-size:14px;font-weight:500;color:var(--text2);text-decoration:none;transition:color .22s;}
+.nav-links a:hover{color:var(--lav);}
+.nav-links a.active{color:var(--text);}
+.nav-links a.active::before{content:'·';margin-right:4px;color:var(--cyan);font-size:20px;line-height:0;vertical-align:middle;}
+
+/* ── PROGRESS INDICATOR LATERAL ── */
+.section-progress{position:fixed;right:28px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:10px;align-items:center;}
+.sp-dot{width:6px;height:6px;border-radius:50%;background:rgba(26,29,46,0.15);cursor:pointer;transition:all .35s;position:relative;}
+.sp-dot::after{content:attr(data-label);position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none;}
+.sp-dot:hover::after{opacity:1;}
+.sp-dot.active{background:var(--vio);width:8px;height:8px;}
+.sp-dot.active::after{opacity:1;color:var(--vio);}
+.sp-line{width:1px;height:20px;background:rgba(26,29,46,0.1);}
+
+/* ── HERO ── */
+.project-hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:140px 60px 80px;overflow:hidden;}
+.project-hero-bg{position:absolute;inset:0;z-index:0;background:#2d1a45;}
+.project-hero-bg img{width:100%;height:100%;object-fit:cover;display:block;opacity:0.55;filter:saturate(0.7);}
+.project-hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(20,10,35,0.94) 0%,rgba(45,26,69,0.55) 45%,rgba(45,26,69,0.15) 100%);}
+.project-hero-inner{position:relative;z-index:2;max-width:820px;}
+.project-hero-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;background:rgba(103,63,142,0.25);backdrop-filter:blur(12px);border:1px solid rgba(252,255,86,0.3);border-radius:100px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.9);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fadeUp .7s ease .1s both;}
+.project-hero-chip::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--yel);flex-shrink:0;}
+.project-hero-title{font-family:var(--font-serif);font-style:italic;font-size:clamp(48px,7vw,96px);font-weight:400;line-height:.95;letter-spacing:-0.03em;color:var(--white);margin-bottom:8px;opacity:0;animation:fadeUp .9s cubic-bezier(.22,.68,0,1.1) .2s both;padding-bottom:8px;}
+.project-hero-title strong{font-family:var(--font-title);font-weight:700;font-style:normal;display:block;background:var(--grad-vio);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;padding-bottom:10px;}
+.project-hero-sub{font-size:17px;font-weight:300;line-height:1.75;color:rgba(255,255,255,0.7);max-width:560px;opacity:0;animation:fadeUp .9s ease .4s both;}
+.project-hero-meta{display:flex;gap:32px;flex-wrap:wrap;margin-top:40px;opacity:0;animation:fadeUp .9s ease .55s both;}
+.meta-item{display:flex;flex-direction:column;gap:4px;}
+.meta-label{font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+.meta-value{font-size:14px;font-weight:500;color:rgba(255,255,255,0.85);}
+
+/* ── SCROLL DOWN CUE ── */
+.hero-scroll-cue{position:absolute;bottom:28px;left:60px;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 1s ease .9s both;z-index:2;}
+.hsc-text{font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+.hsc-line{width:1px;height:36px;background:linear-gradient(to bottom,rgba(103,63,142,0.6),transparent);animation:breathe 2s ease-in-out infinite;}
+@keyframes breathe{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+/* ── CONTENIDO ── */
+.case-wrap{max-width:1160px;margin:0 auto;padding:100px 60px;display:flex;flex-direction:column;gap:0;}
+
+/* Sección con animación de entrada */
+.cs-section{display:flex;flex-direction:column;gap:20px;padding:80px 0;position:relative;}
+.cs-section:not(:last-child){border-bottom:1px solid var(--border-sm);}
+
+/* Número de sección flotante */
+.cs-section-num{position:absolute;top:72px;right:-20px;font-family:var(--font-serif);font-style:italic;font-size:120px;font-weight:400;color:rgba(103,63,142,0.06);line-height:1;pointer-events:none;user-select:none;}
+
+.cs-label{font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--vio);display:inline-flex;align-items:center;gap:10px;}
+.cs-label::before{content:'';display:block;width:22px;height:1.5px;background:var(--vio);border-radius:2px;}
+
+/* Título con underline que se dibuja */
+.cs-title{font-family:var(--font-title);font-size:clamp(24px,3vw,36px);font-weight:700;line-height:1.1;letter-spacing:-0.025em;color:var(--text);}
+.cs-title em{font-family:var(--font-serif);font-style:italic;font-weight:400;background:var(--grad-vio);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;padding-bottom:2px;}
+
+
+.cs-body{font-size:15.5px;line-height:1.88;color:var(--text2);font-weight:300;max-width:700px;}
+.cs-body strong{font-weight:600;color:var(--text);}
+
+/* Entrada lateral alternada */
+.slide-in{opacity:0;transition:opacity .75s ease, transform .75s cubic-bezier(.22,.68,0,1.1);}
+.slide-in.from-left{transform:translateX(-48px);}
+.slide-in.from-right{transform:translateX(48px);}
+.slide-in.from-bottom{transform:translateY(36px);}
+.slide-in.visible{opacity:1;transform:translate(0,0);}
+.si-d1{transition-delay:.1s;}.si-d2{transition-delay:.2s;}.si-d3{transition-delay:.3s;}.si-d4{transition-delay:.4s;}
+
+/* Highlight */
+.cs-highlight{padding:28px 32px;background:rgba(103,63,142,0.05);border-left:3px solid var(--vio);border-radius:0 12px 12px 0;}
+.cs-highlight p{font-family:var(--font-serif);font-style:italic;font-size:18px;line-height:1.65;color:var(--text);}
+.cs-highlight span{background:var(--grad-vio);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* Tags */
+.cs-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.cs-tag{padding:6px 14px;background:var(--surface);border:1px solid var(--border-sm);border-radius:100px;font-size:12px;font-weight:500;color:var(--text2);}
+.cs-tag.c{border-color:rgba(103,63,142,0.25);color:var(--vio);background:rgba(103,63,142,0.05);}
+.cs-tag.l{border-color:rgba(252,255,86,0.35);color:#7a6a00;background:rgba(252,255,86,0.08);}
+
+/* ── BENTO GALLERY ── */
+.bento-gallery{width:100vw;margin-left:calc(-50vw + 50%);display:grid;grid-template-columns:1.6fr 1fr 1fr;grid-template-rows:280px 320px;gap:3px;}
+.bg-item{overflow:hidden;background:var(--bg2);position:relative;}
+.bg-item.tall{grid-row:span 2;}
+.bg-item.wide{grid-column:span 2;}
+.bg-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease;}
+.bg-item:hover img{transform:scale(1.05);}
+
+/* ── PROCESO ── */
+.process-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.pc-card{background:var(--white);border:1px solid var(--border-sm);border-radius:16px;padding:24px 20px;position:relative;overflow:hidden;transition:box-shadow .3s,transform .3s;cursor:default;}
+.pc-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px);}
+.pc-card::after{content:'';position:absolute;bottom:0;left:0;height:2px;width:0%;background:var(--grad-vio);transition:width .4s ease;}
+.pc-card:hover::after{width:100%;}
+.pc-num{font-family:var(--font-serif);font-style:italic;font-size:40px;font-weight:400;color:rgba(103,63,142,0.12);line-height:1;margin-bottom:12px;}
+.pc-title{font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.pc-desc{font-size:13px;color:var(--text2);line-height:1.6;font-weight:300;}
+.pc-extra{font-size:12px;color:var(--text3);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-sm);display:none;}
+.pc-card:hover .pc-extra{display:block;}
+
+/* ── CONSTRUCTIVO 2x2 full width ── */
+.constructive-grid{width:100vw;margin-left:calc(-50vw + 50%);display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+.c-img{background:transparent;overflow:hidden;position:relative;aspect-ratio:4/3;}
+.c-img img{width:100%;height:100%;object-fit:contain;padding:16px;background:#FFFFFF;transition:transform .4s ease;}
+.c-img:hover img{transform:scale(1.03);}
+.c-img-badge{position:absolute;bottom:12px;left:12px;padding:4px 10px;background:rgba(26,29,46,0.75);backdrop-filter:blur(8px);border-radius:100px;font-size:10px;font-weight:600;color:var(--white);letter-spacing:0.08em;}
+
+/* Download */
+.download-wrap{display:flex;align-items:center;gap:16px;}
+.download-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--grad-vio);border-radius:100px;font-size:13px;font-weight:600;color:var(--white);text-decoration:none;transition:box-shadow .3s,transform .3s;}
+.download-btn:hover{box-shadow:0 8px 24px rgba(103,63,142,0.3);transform:translateY(-2px);}
+.download-hint{font-size:12px;color:var(--text3);}
+
+/* ── PALETA ── */
+.palette-label{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);}
+.color-swatches{display:flex;gap:12px;flex-wrap:wrap;}
+.color-swatch{display:flex;flex-direction:column;gap:0;cursor:default;position:relative;}
+.swatch-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--text);color:var(--white);font-size:11px;padding:5px 10px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;}
+.color-swatch:hover .swatch-tip{opacity:1;}
+.swatch-box{width:80px;height:80px;border-radius:12px;transition:transform .25s;}
+.color-swatch:hover .swatch-box{transform:scale(1.08);}
+.swatch-info{padding:8px 0 0;}
+.swatch-hex{font-family:var(--font-title);font-size:12px;font-weight:700;color:var(--text);}
+.swatch-name{font-size:11px;color:var(--text3);}
+
+/* Tipografía */
+.typo-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.typo-card{background:var(--white);border:1px solid var(--border-sm);border-radius:16px;padding:28px 24px;position:relative;overflow:hidden;}
+.typo-card::before{content:attr(data-letter);position:absolute;top:-10px;right:16px;font-family:var(--font-serif);font-style:italic;font-size:100px;color:rgba(103,63,142,0.06);line-height:1;pointer-events:none;}
+.typo-card-role{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
+.typo-sample-big{font-family:var(--font-title);font-size:36px;font-weight:700;color:var(--text);letter-spacing:-0.02em;margin-bottom:10px;}
+.typo-sample-body{font-size:13.5px;color:var(--text2);line-height:1.6;}
+.typo-sample-tag{display:inline-block;margin-top:8px;padding:4px 10px;background:rgba(103,63,142,0.07);border-radius:100px;font-size:11px;color:var(--vio);font-weight:500;}
+
+/* Moodboard */
+.moodboard-title{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);}
+.moodboard{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;border-radius:16px;overflow:hidden;}
+.mb-item{aspect-ratio:1;background:#673F8E;overflow:hidden;}
+.mb-item.wide{grid-column:span 2;aspect-ratio:auto;min-height:200px;}
+.mb-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.project-img{width:100%;height:100%;object-fit:cover;display:block;}
+.mb-item:hover img{transform:scale(1.04);}
+
+/* Cartel anotado */
+.signage-annotated{background:var(--white);border:1px solid var(--border-sm);border-radius:20px;padding:32px;}
+.sa-label{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:20px;}
+.sa-inner{
+    display:block;
+}
+.sa-img-zone{
+    width:100%;
+    border-radius:12px;
+    overflow:hidden;
+}
+.sa-img-zone img{
+    width:100%;
+    height:auto;
+    display:block;
+}
+.sa-annotations{display:flex;flex-direction:column;gap:20px;padding-top:8px;}
+.sa-anno{display:flex;align-items:flex-start;gap:12px;}
+.sa-dot{width:8px;height:8px;border-radius:50%;background:var(--vio);flex-shrink:0;margin-top:5px;}
+.sa-anno-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.sa-anno-desc{font-size:12.5px;color:var(--text2);line-height:1.5;font-weight:300;}
+
+/* ── SOLUCIÓN FINAL full width con parallax ── */
+.result-fullwidth{
+    width:100vw;
+    margin-left:calc(-50vw + 50%);
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    overflow:hidden;
+}
+
+.result-row1,
+.result-row2{
+    display:grid;
+    gap:3px;
+}
+
+/* fila superior */
+.result-row1{
+    grid-template-columns:2fr 1fr;
+}
+
+/* fila inferior */
+.result-row2{
+    grid-template-columns:1fr 1fr 1fr;
+}
+
+/* cajas de imágenes */
+.r-img{
+    position:relative;
+    overflow:hidden;
+    background:var(--bg2);
+    height:360px;
+}
+
+/* etiquetas */
+.r-label{
+    position:absolute;
+    bottom:12px;
+    left:12px;
+    padding:4px 10px;
+    background:rgba(26,29,46,0.72);
+    backdrop-filter:blur(8px);
+    border-radius:100px;
+    font-size:10px;
+    font-weight:600;
+    color:var(--white);
+    letter-spacing:0.08em;
+    z-index:2;
+}
+
+/* imágenes */
+.r-img img{
+    width:100%;
+    height:110%;
+    object-fit:cover;
+    display:block;
+    transform:translateY(0);
+    transition:transform .1s linear;
+}
+
+
+/* ── REFLEXIÓN ── */
+.reflection-block{background:var(--dark);border-radius:20px;padding:40px 48px;}
+.reflection-block p{font-family:var(--font-serif);font-style:italic;font-size:clamp(18px,2.2vw,24px);line-height:1.65;color:rgba(255,255,255,0.85);}
+.reflection-block span{background:var(--grad-vio);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;padding-bottom:2px;}
+
+/* ── NAV ENTRE PROYECTOS ── */
+.project-nav{max-width:1160px;margin:0 auto;padding:60px 60px 80px;display:grid;grid-template-columns:1fr 1fr;gap:16px;border-top:1px solid var(--border-sm);}
+.pnb{display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--white);border:1px solid var(--border-sm);border-radius:16px;text-decoration:none;color:var(--text);transition:all .28s;}
+.pnb:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);border-color:rgba(103,63,142,0.3);}
+.pnb.next{justify-content:flex-end;text-align:right;}
+.pnb-arrow{font-size:20px;color:var(--vio);transition:transform .25s;}
+.pnb.prev:hover .pnb-arrow{transform:translateX(-4px);}
+.pnb.next:hover .pnb-arrow{transform:translateX(4px);}
+.pnb-label{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.pnb-title{font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--text);}
+
+/* ── FOOTER ── */
+footer{padding:64px 40px;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center;background:#1A1D2E;}
+.footer-name{font-family:var(--font-title);font-size:13px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-icons{display:flex;gap:28px;}
+.footer-icon{display:flex;align-items:center;color:rgba(255,255,255,0.35);text-decoration:none;transition:color .25s,transform .25s;}
+.footer-icon:hover{color:rgba(255,255,255,0.85);transform:translateY(-3px);}
+.footer-tagline{font-size:12px;color:rgba(255,255,255,0.28);letter-spacing:0.1em;text-transform:uppercase;}
+
+/* ── HAMBURGER MENU ── */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;
+  width:40px;height:40px;cursor:pointer;margin-left:auto;background:none;
+  border:none;padding:8px;border-radius:8px;transition:background .2s;flex-shrink:0;}
+.nav-hamburger:hover{background:rgba(103,63,142,0.08);}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--text);
+  border-radius:2px;transition:transform .3s ease,opacity .3s ease,width .3s ease;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;width:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.nav-mobile-overlay{position:fixed;inset:0;background:rgba(26,29,46,0.5);backdrop-filter:blur(4px);z-index:150;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+.nav-mobile-overlay.open{opacity:1;pointer-events:all;}
+.nav-mobile-panel{position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);
+  background:var(--bg-warm);z-index:160;display:flex;flex-direction:column;
+  padding:88px 32px 48px;transform:translateX(100%);
+  transition:transform .35s cubic-bezier(.22,.68,0,1.1);box-shadow:-8px 0 40px rgba(0,0,0,0.12);}
+.nav-mobile-panel.open{transform:translateX(0);}
+.nav-mobile-links{display:flex;flex-direction:column;gap:4px;list-style:none;}
+.nav-mobile-links a{font-family:var(--font-body);font-size:15px;font-weight:500;
+  color:var(--text2);text-decoration:none;padding:14px 0;
+  border-bottom:1px solid var(--border-sm);display:block;letter-spacing:0.01em;
+  transition:color .22s,padding-left .22s;}
+.nav-mobile-links a:hover{color:#673F8E;padding-left:6px;}
+.nav-mobile-links a:last-child{border-bottom:none;}
+.nav-mobile-footer{margin-top:auto;font-size:12px;color:var(--text3);letter-spacing:0.08em;}
+.bi-label{position:absolute;bottom:8px;left:8px;padding:3px 8px;
+  background:rgba(26,29,46,0.72);backdrop-filter:blur(8px);border-radius:100px;
+  font-size:9px;font-weight:600;color:rgba(255,255,255,0.85);letter-spacing:0.08em;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+/* RESPONSIVE */
+@media(max-width:1100px){.section-progress{display:none;}}
+@media(max-width:768px){
+  body{cursor:auto;}.cursor-dot,.cursor-ring{display:none;}
+  nav{padding:0 24px;}.nav-links{gap:20px;}
+  .project-hero{padding:120px 24px 60px;}
+  .case-wrap{padding:60px 24px;}
+  .bento-gallery{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+  .bg-item.tall{grid-row:span 1;}
+  .process-cards,.typo-grid{grid-template-columns:1fr;}
+  .constructive-grid{grid-template-columns:1fr;}
+  .sa-inner{grid-template-columns:1fr;}
+  .result-row1,.result-row2{grid-template-columns:1fr;}
+  .project-nav{grid-template-columns:1fr;padding:40px 24px;}
+  footer{padding:48px 24px;}
+  .cs-section-num{display:none;}
+  .nav-links{display:none;}
+.nav-hamburger{display:flex;}
+}
+</style>
+</head>
+<body>
+
+<div class="reading-bar" id="readingBar"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- PROGRESS DOTS -->
+<div class="section-progress" id="sectionProgress">
+  <div class="sp-dot active" data-target="contexto" data-label="Contexto"></div>
+  <div class="sp-line"></div>
+  <div class="sp-dot" data-target="proceso" data-label="Proceso"></div>
+  <div class="sp-line"></div>
+  <div class="sp-dot" data-target="constructivo" data-label="Constructivo"></div>
+  <div class="sp-line"></div>
+  <div class="sp-dot" data-target="visual" data-label="Visual"></div>
+  <div class="sp-line"></div>
+  <div class="sp-dot" data-target="resultado" data-label="Resultado"></div>
+  <div class="sp-line"></div>
+  <div class="sp-dot" data-target="reflexion" data-label="Reflexión"></div>
+</div>
+<div class="nav-mobile-overlay" id="navOverlay"></div>
+<div class="nav-mobile-panel" id="navPanel">
+  <ul class="nav-mobile-links">
+    <li><a href="index.html#hero" class="nav-mobile-link">Inicio</a></li>
+    <li><a href="index.html#about" class="nav-mobile-link">Sobre mí</a></li>
+    <li><a href="index.html#work" class="nav-mobile-link">Proyectos</a></li>
+    <li><a href="index.html#contact" class="nav-mobile-link">Contacto</a></li>
+  </ul>
+  <div class="nav-mobile-footer">Serrana Corbo · Diseñadora Industrial + UX/UI</div>
+</div>
+<!-- NAVBAR -->
+<header id="siteHeader">
+  <nav>
+    <a href="index.html" class="nav-logo-slot" title="Inicio"><img src="img/logo.png" alt="Mi Logo"></a>
+    <ul class="nav-links">
+      <li><a href="index.html#hero">Inicio</a></li>
+      <li><a href="index.html#about">Sobre mí</a></li>
+      <li><a href="index.html#work" class="active">Proyectos</a></li>
+      <li><a href="index.html#contact">Contacto</a></li>
+    </ul>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menú">
+  <span></span><span></span><span></span>
+</button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="project-hero" id="top">
+  <div class="project-hero-bg">
+    <img src="img/hero.png" alt="Cultura en tu Barrio" onerror="this.style.display='none'">
+  </div>
+  <div class="project-hero-inner">
+    <div class="project-hero-chip">Diseño Industrial · Señalética · Proyecto académico</div>
+    <h1 class="project-hero-title">
+      Cultura en tu
+      <strong>Barrio.</strong>
+    </h1>
+    <p class="project-hero-sub">Sistema de señalética urbana para mejorar la visibilidad del Centro Cultural Artesano y fortalecer su vínculo con los vecinos del barrio Peñarol, Montevideo.</p>
+    <div class="project-hero-meta">
+      <div class="meta-item"><span class="meta-label">Disciplina</span><span class="meta-value">Diseño Industrial</span></div>
+      <div class="meta-item"><span class="meta-label">Contexto</span><span class="meta-value">Proyecto académico · Grupal</span></div>
+      <div class="meta-item"><span class="meta-label">Año</span><span class="meta-value">2024</span></div>
+      <div class="meta-item"><span class="meta-label">Colaboración</span><span class="meta-value">Valentina Rapshy · María Eugenia Martínez</span></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- CONTENIDO -->
+<div class="case-wrap">
+
+  <!-- 01 CONTEXTO -->
+  <section class="cs-section" id="contexto">
+    <span class="cs-section-num">01</span>
+    <div class="cs-label slide-in from-left">01 · El contexto</div>
+    <h2 class="cs-title slide-in from-left si-d1"><em>¿De dónde surge</em> el proyecto?</h2>
+    <p class="cs-body slide-in from-left si-d2">Proyecto académico desarrollado en el marco de la materia <strong>Unidad de Proyecto 4</strong>, enfocado en el diseño de un sistema de cartelería para mejorar la visibilidad del <strong>Centro Cultural Artesano</strong> y fortalecer su vínculo con los vecinos del barrio Peñarol. Surge a partir de su baja visibilidad dentro de la comunidad y la falta de compromiso de algunos vecinos en sus actividades, lo que refleja una <strong>desconexión entre la oferta cultural del centro y los residentes del barrio</strong>.</p>
+    <p class="cs-body slide-in from-left si-d3">El sistema consta de dos tipos de cartelería. La <strong>cartelería informativa</strong>, ubicada en puntos centrales del barrio Peñarol y los barrios adyacentes, comunica la agenda y actividades del centro. La <strong>cartelería indicativa</strong>, ubicada en las avenidas principales, indica, a través de su forma de flecha, la dirección del centro cultural y <strong>los minutos caminando que faltan para llegar</strong>.</p>
+    <div class="cs-highlight slide-in from-left si-d4">
+      <p>"¿Cómo hacer que el Centro Cultural Artesano <span>se sienta parte del barrio</span> y el barrio se sienta parte del centro?"</p>
+    </div>
+  </section>
+
+  <div class="bento-gallery slide-in from-bottom">
+    <div class="bg-item tall"><img src="img/salacentroartesano.jpg" alt="Barrio Peñarol" onerror="this.style.display='none'"><div class="bi-label">Fachada del Centro Cultural Artesano</div></div>
+    <div class="bg-item"><img src="img/escenario_bento2.JPG" alt="Centro Cultural Artesano" onerror="this.style.display='none'"><div class="bi-label">Sala del Centro Cultural Artesano</div></div>
+    <div class="bg-item"><img src="img/barriopeñarol_bentogrid.jpg" alt="Diagnóstico" onerror="this.style.display='none'"><div class="bi-label">Contexto urbano</div></div>
+    <div class="bg-item wide"><img src="img/peñarol_bentogrid.jpg" alt="Brief del proyecto" onerror="this.style.display='none'"><div class="bi-label">Contexto urbano</div></div>
+  </div>
+
+
+
+  <!-- 02 PROCESO -->
+  <section class="cs-section" id="proceso">
+    <span class="cs-section-num">02</span>
+    <div class="cs-label slide-in from-right">02 · Proceso</div>
+    <h2 class="cs-title slide-in from-right si-d1"><em>Cómo se llegó</em> a la solución</h2>
+    <p class="cs-body slide-in from-right si-d2">El proceso recorrió cuatro etapas de forma iterativa, con foco en el <strong>vecino real del barrio Peñarol</strong>. Pasá el cursor sobre cada etapa para más detalle.</p>
+    <div class="process-cards slide-in from-bottom si-d3">
+      <div class="pc-card"><div class="pc-num">01</div><div class="pc-title">Investigación</div><div class="pc-desc">Relevamiento del barrio, entrevistas a vecinos y análisis del espacio urbano existente.</div><div class="pc-extra">Mapeo de recorridos peatonales, relevamiento fotográfico, entrevistas a vecinos y funcionarios del Centro Cultural Artesano.</div></div>
+      <div class="pc-card"><div class="pc-num">02</div><div class="pc-title">Ideación</div><div class="pc-desc">Generación de conceptos, bocetado y exploración formal de ambos tipos de cartelería.</div><div class="pc-extra">Variedad de alternativas formales por tipo de cartel. Evaluación por visibilidad, coherencia formal e identitaria y viabilidad de producción.</div></div>
+      <div class="pc-card"><div class="pc-num">03</div><div class="pc-title">Desarrollo</div><div class="pc-desc">Modelado técnico, definición de materiales, estructura y sistema de anclaje para espacio urbano.</div><div class="pc-extra">Laminas técnicas finales, especificación de materiales y sistema de anclaje en mobiliario urbano existente.</div></div>
+      <div class="pc-card"><div class="pc-num">04</div><div class="pc-title">Testeo</div><div class="pc-desc">Validación visual, ajuste de escala y legibilidad en distintas condiciones.</div><div class="pc-extra">Simulación de los carteles en fotografías del barrio. Evaluación de impacto visual, proporción y legibilidad a distintas distancias y condiciones de luz.</div></div>
+    </div>
+  </section>
+
+  <!-- 03 CONSTRUCTIVO -->
+  <section class="cs-section" id="constructivo">
+    <span class="cs-section-num">03</span>
+    <div class="cs-label slide-in from-left">03 · Detalles constructivos</div>
+    <h2 class="cs-title slide-in from-left si-d1"><em>Anatomía</em> del sistema</h2>
+    <p class="cs-body slide-in from-left si-d2">Cada pieza fue diseñada considerando su <strong>producción, resistencia a la intemperie y facilidad de mantenimiento</strong>. Las vistas incluyen alzados, plantas y explotadas de ensamblaje.</p>
+  </section>
+
+  <div class="constructive-grid slide-in from-bottom">
+    <div class="c-img"><img src="img/informativa_vistas.png" alt="Vista frontal y posterior — Informativa" onerror="this.parentElement.style.minHeight='200px'"><div class="c-img-badge">Informativa vistas — F + P</div></div>
+    <div class="c-img"><img src="img/bannerinfor 1.png" alt="Explotada — Informativa" onerror="this.parentElement.style.minHeight='200px'"><div class="c-img-badge">Informativa — Explotada</div></div>
+    <div class="c-img"><img src="img/indicativa_vistas.png" alt="Vista frontal y posterior — Indicativa" onerror="this.parentElement.style.minHeight='200px'"><div class="c-img-badge">Indicativa vistas — F + P</div></div>
+    <div class="c-img"><img src="img/explotadabanner 1.png" alt="Explotada — Indicativa" onerror="this.parentElement.style.minHeight='200px'"><div class="c-img-badge">Indicativa — Explotada</div></div>
+  </div>
+
+  <div class="download-wrap slide-in from-bottom" style="padding-top:32px;">
+    <a href="#" class="download-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Descargar carpeta técnica
+    </a>
+    <span class="download-hint">Planos, memorias y especificaciones técnicas — PDF</span>
+  </div>
+
+  <div style="height:1px;background:var(--border-sm);margin:0 0 0 0;"></div>
+
+  <!-- 04 COMUNICACIÓN VISUAL -->
+  <section class="cs-section" id="visual">
+    <span class="cs-section-num">04</span>
+    <div class="cs-label slide-in from-right">04 · Comunicación visual</div>
+    <h2 class="cs-title slide-in from-right si-d1"><em>El lenguaje visual</em> del sistema</h2>
+    <p class="cs-body slide-in from-right si-d2">La identidad visual toma elementos presentes en la <strong>identidad del Centro Cultural Artesano</strong>, buscando mantener una conexión con la institución. El violeta del logo se tomó como color principal y se combinó con amarillo para generar contraste, mientras que el celeste y el blanco completan la paleta. </p>
+    <p class="cs-body slide-in from-right si-d3">La forma del logo del Centro Cultural Artesano también se abstrajo y se incorporó como <strong>recurso gráfico dentro del sistema</strong>, apareciendo tanto en los elementos de la cartelería como en la estructura del cartel informativo.</p>
+
+    <div class="palette-label slide-in from-right si-d3">Paleta de colores</div>
+    <div class="color-swatches slide-in from-right si-d3">
+      <div class="color-swatch"><div class="swatch-tip">Violeta oscuro</div><div class="swatch-box" style="background:#673F8E;"></div><div class="swatch-info"><div class="swatch-hex">#673F8E</div><div class="swatch-name">Violeta oscuro</div></div></div>
+      <div class="color-swatch"><div class="swatch-tip">Celeste</div><div class="swatch-box" style="background:#A5CECA;"></div><div class="swatch-info"><div class="swatch-hex">#A5CECA</div><div class="swatch-name">Celeste</div></div></div>
+      <div class="color-swatch"><div class="swatch-tip">Amarillo</div><div class="swatch-box" style="background:#FCFF56;"></div><div class="swatch-info"><div class="swatch-hex">#FCFF56</div><div class="swatch-name">Amarillo</div></div></div>
+      <div class="color-swatch"><div class="swatch-tip">Blanco puro</div><div class="swatch-box" style="background:#FFFFFF;border:1px solid rgba(0,0,0,0.08);"></div><div class="swatch-info"><div class="swatch-hex">#FFFFFF</div><div class="swatch-name">Blanco puro</div></div></div>
+      
+      
+    </div>
+
+    <div class="palette-label slide-in from-left si-d1" style="margin-top:4px;">Sistema tipográfico</div>
+    <div class="typo-grid slide-in from-left si-d2">
+      <div class="typo-card" data-letter="Aa"><div class="typo-card-role">Títulos</div><div class="typo-sample-big">CIUDATELLA</div><div class="typo-sample-body">Alta legibilidad a distancia. Diseñada para ser leída desde el paso en movimiento.</div></div>
+      <div class="typo-card" data-letter="Tt"><div class="typo-card-role">Cuerpo</div><div class="typo-sample-body" style="font-size:16px;font-weight:500;color:var(--text);margin-bottom:10px;">Centro Cultural Artesano<br>5 min caminando →</div><div class="typo-sample-tag">Indicativa · Dirección Norte</div></div>
+    </div>
+
+    <div class="moodboard-title slide-in from-bottom si-d1">Elementos del sistema</div>
+    <div class="moodboard slide-in from-bottom si-d2">
+      <div class="mb-item"><img src="img/QR_.png" alt="Elemento visual 1" class="project-img"></div>
+      <div class="mb-item"><img src="img/TELEFONO_.png" alt="Elemento visual 2" class="project-img"></div>
+      <div class="mb-item"><img src="img/PERSONA_.png" alt="Elemento visual 3" class="project-img"></div>
+      <div class="mb-item"><img src="img/UBICACION_LG.png" alt="Elemento visual 4" class="project-img"></div>
+      <div class="mb-item"><img src="img/MUNICIPIOG_.png" alt="Elemento visual 5" class="project-img"></div>
+       <div class="mb-item"><img src="img/CCA_LG.png" alt="Elemento visual 6" class="project-img"></div>
+    </div>
+
+    <div class="signage-annotated slide-in from-bottom si-d3">
+      <div class="sa-label">Anatomía visual de ambas tipologías</div>
+      <div class="sa-inner">
+        <div class="sa-img-zone"><img src="img/VISUAL_.jpg" alt="Cartel informativo" onerror="this.style.display='none'"></div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 SOLUCIÓN FINAL -->
+  <section class="cs-section" id="resultado">
+    <span class="cs-section-num">05</span>
+    <div class="cs-label slide-in from-left">05 · Solución final</div>
+    <h2 class="cs-title slide-in from-left si-d1"><em>El sistema</em> en el espacio</h2>
+  </section>
+
+  <div class="result-fullwidth" id="parallaxGallery">
+    <div class="result-row1">
+      <div class="r-img"><img src="img/informativa_resultados.jpg" alt="Contexto urbano" onerror="this.parentElement.style.minHeight='300px'"></div>
+      <div class="r-img"><img src="img/indicativa_resultados.png" alt="Cartelería informativa" onerror="this.parentElement.style.minHeight='300px'"></div>
+    </div>
+    <div class="result-row2">
+      <div class="r-img"><img src="img/GRIDFINAL_piso.png" alt="Cartelería indicativa" onerror="this.parentElement.style.minHeight='200px'"></div>
+      <div class="r-img"><img src="img/GRIDFINAL_cielo.png" alt="Detalle de montaje" onerror="this.parentElement.style.minHeight='200px'"></div>
+      <div class="r-img"><img src="img/GRIDFINAL_informativa.PNG" alt="Vista nocturna" onerror="this.parentElement.style.minHeight='200px'"></div>
+    </div>
+  </div>
+
+  <!-- 06 REFLEXIÓN -->
+  <section class="cs-section" id="reflexion">
+    <span class="cs-section-num">06</span>
+    <div class="cs-label slide-in from-right">06 · Reflexión</div>
+    <h2 class="cs-title slide-in from-right si-d1"><em>Lo que nos dejó</em> este proyecto</h2>
+    <div class="reflection-block slide-in from-bottom si-d2">
+      <p>"Este proyecto nos permitió poner en práctica distintas herramientas de diseño trabajando sobre <span>una necesidad concreta del barrio</span>. También nos ayudó a entender la importancia de mantener una relación entre la identidad de una institución y las distintas piezas que forman parte de un sistema de comunicación. A lo largo del proceso fuimos ajustando las propuestas a partir de las correcciones y del análisis del contexto, hasta llegar a una solución que respondiera a los objetivos planteados." - <span>Fragmento de las conclusiones finales.</span></p>
+    </div>
+  </section>
+
+</div><!-- /case-wrap -->
+
+<!-- NAV ENTRE PROYECTOS -->
+<div class="project-nav">
+  <a href="proyecto-residencial-nahuel.html" class="pnb prev">
+    <span class="pnb-arrow">←</span>
+    <div><div class="pnb-label">Proyecto anterior</div><div class="pnb-title">Residencial Nahuel</div></div>
+  </a>
+  <a href="proyecto-almacenamiento-modular.html" class="pnb next">
+    <div><div class="pnb-label">Siguiente proyecto</div><div class="pnb-title">Sistema de Almacenamiento Modular</div></div>
+    <span class="pnb-arrow">→</span>
+  </a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">Serrana Corbo</span>
+  <div class="footer-icons">
+    <a href="https://www.linkedin.com/in/serrana-corbo-a5436225b/" target="_blank" class="footer-icon" aria-label="LinkedIn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+    <a href="#" class="footer-icon" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    <a href="#" class="footer-icon" aria-label="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+  </div>
+  <span class="footer-tagline">Diseño Industrial + UX · UI</span>
+</footer>
+
+<script>
+// CURSOR
+var dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing'),mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function ar(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ar);})();
+document.querySelectorAll('a,button,.pc-card,.c-img,.r-img,.bg-item,.mb-item,.pnb,.download-btn,.color-swatch').forEach(function(el){
+  el.addEventListener('mouseenter',function(){ring.classList.add('hovering');});
+  el.addEventListener('mouseleave',function(){ring.classList.remove('hovering');});
+});
+
+// READING BAR
+var bar=document.getElementById('readingBar');
+window.addEventListener('scroll',function(){
+  var t=document.body.scrollHeight-window.innerHeight;
+  if(t>0) bar.style.width=(window.scrollY/t*100)+'%';
+},{passive:true});
+
+// NAVBAR
+var hdr=document.getElementById('siteHeader');
+window.addEventListener('scroll',function(){hdr.classList.toggle('scrolled',window.scrollY>30);},{passive:true});
+
+// SLIDE-IN OBSERVER
+var slideObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('visible');slideObs.unobserve(e.target);}
+  });
+},{threshold:0.12});
+document.querySelectorAll('.slide-in').forEach(function(el){slideObs.observe(el);});
+
+// SECTION IN-VIEW (para el underline del título)
+var secObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting) e.target.classList.add('in-view');
+  });
+},{threshold:0.2});
+document.querySelectorAll('.cs-section').forEach(function(s){secObs.observe(s);});
+
+// PROGRESS DOTS
+var sections=document.querySelectorAll('.cs-section[id]');
+var dots=document.querySelectorAll('.sp-dot');
+dots.forEach(function(d){
+  d.addEventListener('click',function(){
+    var el=document.getElementById(d.getAttribute('data-target'));
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+window.addEventListener('scroll',function(){
+  var cur='';
+  sections.forEach(function(s){if(window.scrollY>=s.offsetTop-200) cur=s.id;});
+  dots.forEach(function(d){d.classList.toggle('active',d.getAttribute('data-target')===cur);});
+},{passive:true});
+
+// PARALLAX en galería de resultado
+var pGal=document.getElementById('parallaxGallery');
+if(pGal){
+  var imgs=pGal.querySelectorAll('.r-img img');
+  window.addEventListener('scroll',function(){
+    var rect=pGal.getBoundingClientRect();
+    var progress=(window.innerHeight-rect.top)/(window.innerHeight+rect.height);
+    var shift=(progress-.5)*20;
+    imgs.forEach(function(img,i){
+      img.style.transform='translateY('+(i%2===0?-shift:shift)+'px)';
+    });
+  },{passive:true}); 
+}
+var hamburger=document.getElementById('navHamburger');
+var overlay=document.getElementById('navOverlay');
+var panel=document.getElementById('navPanel');
+function openMenu(){hamburger.classList.add('open');overlay.classList.add('open');panel.classList.add('open');document.body.style.overflow='hidden';}
+function closeMenu(){hamburger.classList.remove('open');overlay.classList.remove('open');panel.classList.remove('open');document.body.style.overflow='';}
+hamburger.addEventListener('click',function(){this.classList.contains('open')?closeMenu():openMenu();});
+overlay.addEventListener('click',closeMenu);
+document.querySelectorAll('.nav-mobile-link').forEach(function(a){a.addEventListener('click',closeMenu);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});
+</script>
+</body>
+</html>
