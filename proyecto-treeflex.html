@@ -523,7 +523,8 @@ footer{padding:64px 40px;display:flex;flex-direction:column;align-items:center;g
   </div>
   <span class="footer-tagline">Diseño Industrial + UX · UI</span>
 </footer>
-<script>
+ <script src="lang.js"></script>
+ <script>
 var dot=document.getElementById("cursorDot"),ring=document.getElementById("cursorRing"),mx=0,my=0,rx=0,ry=0;
 document.addEventListener("mousemove",function(e){mx=e.clientX;my=e.clientY;dot.style.left=mx+"px";dot.style.top=my+"px";});
 (function ar(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+"px";ring.style.top=ry+"px";requestAnimationFrame(ar);})();
