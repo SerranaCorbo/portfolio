@@ -250,18 +250,18 @@
   function addLanguageControl() {
     var nav = document.querySelector('nav');
     if (!nav || nav.querySelector('.language-switcher')) return;
-    var control = document.createElement('div');
+    var control = document.createElement('button');
     control.className = 'language-switcher';
-    control.innerHTML = '<span class="language-label">Idioma</span><button type="button" class="language-option ' + (language === 'es' ? 'active' : '') + '" data-language="es">ES</button><span class="language-divider">/</span><button type="button" class="language-option ' + (language === 'en' ? 'active' : '') + '" data-language="en">EN</button>';
+    control.type = 'button';
+    control.setAttribute('aria-label', language === 'es' ? 'Switch to English' : 'Cambiar a español');
+    control.setAttribute('title', language === 'es' ? 'English' : 'Español');
+    control.innerHTML = '<span class="language-option ' + (language === 'es' ? 'active' : '') + '">ES</span><span class="language-divider">/</span><span class="language-option ' + (language === 'en' ? 'active' : '') + '">EN</span>';
     nav.appendChild(control);
-    control.querySelectorAll('[data-language]').forEach(function (button) {
-      button.addEventListener('click', function () {
-        var next = button.getAttribute('data-language');
-        var url = new URL(window.location.href);
-        if (next === 'en') url.searchParams.set('lang', 'en');
-        else url.searchParams.delete('lang');
-        window.location.href = url.toString();
-      });
+    control.addEventListener('click', function () {
+      var url = new URL(window.location.href);
+      if (language === 'es') url.searchParams.set('lang', 'en');
+      else url.searchParams.delete('lang');
+      window.location.href = url.toString();
     });
   }
 
@@ -310,7 +310,7 @@
   }
 
   var style = document.createElement('style');
-  style.textContent = '.language-switcher{display:flex;align-items:center;gap:7px;margin-left:28px;flex-shrink:0;font-family:var(--font-body,Manrope,sans-serif);font-size:11px;letter-spacing:.08em}.language-label{color:var(--text3,#9CA3AF);font-size:10px;text-transform:uppercase;margin-right:3px}.language-option{border:0;background:none;padding:5px 3px;color:var(--text3,#9CA3AF);font:600 11px var(--font-body,Manrope,sans-serif);letter-spacing:.08em;cursor:pointer;transition:color .2s,transform .2s}.language-option:hover,.language-option.active{color:var(--lav,#7C3AED)}.language-option.active{font-weight:700}.language-divider{color:var(--border-sm,#b4bedc)}@media(max-width:768px){.language-switcher{margin-left:14px;gap:4px}.language-label{display:none}.language-option{font-size:10px;padding:5px 2px}}';
+  style.textContent = '.language-switcher{height:32px;min-width:68px;display:flex;align-items:center;justify-content:center;gap:6px;margin-left:36px;padding:0 10px;border:1px solid var(--border-sm,#b4bedc);border-radius:100px;background:rgba(255,255,255,.48);color:var(--text3,#9CA3AF);font:600 11px var(--font-body,Manrope,sans-serif);letter-spacing:.08em;line-height:1;cursor:pointer;flex-shrink:0;transition:background .22s,border-color .22s,box-shadow .22s,transform .22s}.language-switcher:hover{background:rgba(255,255,255,.8);border-color:rgba(124,58,237,.32);box-shadow:0 5px 16px rgba(80,100,180,.12);transform:translateY(-1px)}.language-option{color:var(--text3,#9CA3AF);transition:color .2s}.language-option.active{color:var(--text,#1A1D2E);font-weight:700}.language-divider{color:var(--border-sm,#b4bedc);font-weight:400}@media(max-width:768px){.language-switcher{height:30px;min-width:62px;margin-left:12px;padding:0 8px;gap:5px;font-size:10px}}';
   document.head.appendChild(style);
 
   document.addEventListener('DOMContentLoaded', function () {
